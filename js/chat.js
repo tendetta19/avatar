@@ -222,14 +222,12 @@ function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential) {
 
                 console.log("Unable to start avatar: " + cancellationDetails.errorDetails);
             }
-            document.getElementById('startSession').disabled = false;
-            document.getElementById('configuration').hidden = false;
+            document.getElementById('startSession').disabled = false; 
         }
     }).catch(
         (error) => {
             console.log("[" + (new Date()).toISOString() + "] Avatar failed to start. Error: " + error)
-            document.getElementById('startSession').disabled = false
-            document.getElementById('configuration').hidden = false
+            document.getElementById('startSession').disabled = false 
         }
     )
 }
@@ -442,9 +440,9 @@ function handleUserQuery(userQuery, userQueryHTML, imgUrlPath) {
         speak(getQuickReply(), 2000)
     }
 
-    const azureOpenAIEndpoint = document.getElementById('azureOpenAIEndpoint').value
-    const azureOpenAIApiKey = document.getElementById('azureOpenAIApiKey').value
-    const azureOpenAIDeploymentName = document.getElementById('azureOpenAIDeploymentName').value
+    const azureOpenAIEndpoint = "https://justin-openai-demo.openai.azure.com/";
+    const azureOpenAIApiKey = "1a1f8c2855a44483bbd3ef4c838996c8";
+    const azureOpenAIDeploymentName = "justin-gpt-4o"; 
 
     let url = "{AOAIEndpoint}/openai/deployments/{AOAIDeployment}/chat/completions?api-version=2023-06-01-preview".replace("{AOAIEndpoint}", azureOpenAIEndpoint).replace("{AOAIDeployment}", azureOpenAIDeploymentName)
     let body = JSON.stringify({
@@ -653,13 +651,13 @@ window.startSession = () => {
 window.stopSession = () => {
     document.getElementById('startSession').disabled = false
     document.getElementById('microphone').disabled = true
-    document.getElementById('stopSession').disabled = true
-    document.getElementById('configuration').hidden = false
+    document.getElementById('stopSession').disabled = true 
     document.getElementById('chatHistory').hidden = true
     document.getElementById('showTypeMessage').checked = false
     document.getElementById('showTypeMessage').disabled = true
     document.getElementById('userMessageBox').hidden = true
     document.getElementById('uploadImgIcon').hidden = true
+    document.getElementById('videoContainer').hidden = true
     if (document.getElementById('useLocalVideoForIdle').checked) {
         document.getElementById('localVideo').hidden = true
     }
@@ -688,17 +686,7 @@ window.microphone = () => {
         return
     }
 
-    if (document.getElementById('useLocalVideoForIdle').checked) {
-        if (!sessionActive) {
-            connectAvatar()
-        }
-
-        setTimeout(() => {
-            document.getElementById('audioPlayer').play()
-        }, 5000)
-    } else {
-        document.getElementById('audioPlayer').play()
-    }
+ 
 
     document.getElementById('microphone').disabled = true
     speechRecognizer.recognized = async (s, e) => {
