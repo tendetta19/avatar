@@ -487,7 +487,9 @@ mark{
   background-color: var(--dark-blue);
   box-shadow: 0 4px 4px rgba(26,53,71,0.25), 0 0 0 1px rgba(26,53,71,0.07);
 }
-
+body {
+    background: linear-gradient(to bottom, white, #f0f0f0);
+}
 .checkbox:checked ~ .section .container .row .col-12 p{
   color: var(--dark-blue);
 }
