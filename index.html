@@ -82,6 +82,7 @@
     </div>
     <br />
   </div>
+  
   <div class="col-12 pt-1">
     <p class="mb-4 pb-2">Booking Options</p>
   </div>
@@ -113,6 +114,7 @@
   <button id="clearChatHistory" onclick="window.clearChatHistory()">Clear Chat History</button>
   <button id="stopSession" onclick="window.stopSession()" disabled>Close Avatar Session</button>
    -->
+   <div>
   <div id="videoContainer" style="position: relative; width: 960px;">
     <div id="overlayArea" style="position: absolute;">
       <div id="chatHistory" style="
@@ -130,12 +132,14 @@
       </div>
     <div id="remoteVideo" style="width: 50%; display: inline-block;"></div>
     
-      <div id="cartDisplay" style="position: absolute; top: 20px; right: 20px;">
+
+    </div>
+	      <div id="cartDisplay" style="position: absolute; top: 20px; right: 20px;">
           <h2>Your Cart</h2>
           <ul id="cartItems"></ul>
       </div>
 
-    </div>
+</div>
     <div margin-top="5px">
       <div id="showTypeMessageCheckbox">
         <input type="checkbox" id="showTypeMessage" onchange="window.updateTypeMessageBox()"></input><br />
