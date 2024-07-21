@@ -183,7 +183,7 @@ function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential) {
                 console.log(`WebRTC ${event.track.kind} channel connected.`)
                 document.getElementById('microphone').disabled = false
                 document.getElementById('stopSession').disabled = false
-                document.getElementById('remoteVideo').style.width = '900px'
+                document.getElementById('remoteVideo').style.width = '900px' 
                 document.getElementById('chatHistory').hidden = false
                 document.getElementById('cartDisplay').hidden = false
                 document.getElementById('showTypeMessage').disabled = false
