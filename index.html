@@ -7,7 +7,7 @@
     <script src="./js/SpeechSDK.js"></script>
     <script src="./js/chat.js"></script>
 </head>
-<body style = "background-image: url('https://images.unsplash.com/photo-1690321607902-d97c4b909a23?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); background-size: cover;">
+<body>
 
   <div id="configuration" hidden>
     <h2 style="background-color: white; width: 300px;">Azure Speech Resource</h2>
@@ -84,8 +84,10 @@
   </div>
   
   <div class="col-12 pt-1">
-    <p class="mb-4 pb-2">Booking Options</p>
+
+    <p class="mb-4 pb-2">  </p>
   </div>
+  <div class = "collection">
   <div class="col-12 pb-5">
     <input class="checkbox-booking" type="checkbox" name="booking" id="booking-1">
     <label class="for-checkbox-booking" for="booking-1"  id="startSession" onclick="window.startSession()">
@@ -108,35 +110,42 @@
       <i class='uil uil-wifi mr-3'></i><span class="text">Close Session</span>
     </label> 
   </div>
+  </div>
+  
   <!-- <button id="startSession" onclick="window.startSession()">Open Avatar Session</button>
   <button id="microphone" onclick="window.microphone()" disabled>Start Microphone</button>
   <button id="stopSpeaking" onclick="stopSpeaking()" disabled>Stop Speaking</button>
   <button id="clearChatHistory" onclick="window.clearChatHistory()">Clear Chat History</button>
   <button id="stopSession" onclick="window.stopSession()" disabled>Close Avatar Session</button>
    -->
-   <div>
+<div class="flex-container">
   <div id="videoContainer" style="position: relative; width: 960px;">
     <div id="overlayArea" style="position: absolute;">
-      <div id="chatHistory" style="
+
+      <div id="localVideo" hidden>
+        <video src="video/lisa-casual-sitting-idle.mp4" autoplay loop muted></video>
+      </div>
+    <div id="remoteVideo" style="width: 50%; display: inline-block;"></div>
+  
+      </div>
+
+    </div>
+	
+          <div id="chatHistory" style="
           width: 360px;
           height: 500px;
           font-size: medium;
           border: none;
           resize: none;
-          background-color: transparent;
-          overflow: hidden;" contentEditable="true" hidden></div>
-  
-      </div>
-      <div id="localVideo" hidden>
-        <video src="video/lisa-casual-sitting-idle.mp4" autoplay loop muted></video>
-      </div>
-    <div id="remoteVideo" style="width: 50%; display: inline-block;"></div>
-    
-
-    </div>
-	      <div id="cartDisplay" style="position: absolute; top: 20px; right: 20px;">
-          <h2>Your Caraaaaaat</h2>
+          background-color: white;
+		  justify: left;
+		   
+          overflow: hidden;" contentEditable="false" hidden></div>
+		  
+	      <div id="cartDisplay" style="top: 150px;right: 20px;" hidden>
+          <h2>Your Cart</h2>
           <ul id="cartItems"></ul>
+		  
       </div>
 
 </div>

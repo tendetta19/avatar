@@ -185,6 +185,7 @@ function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential) {
                 document.getElementById('stopSession').disabled = false
                 document.getElementById('remoteVideo').style.width = '900px'
                 document.getElementById('chatHistory').hidden = false
+                document.getElementById('cartDisplay').hidden = false
                 document.getElementById('showTypeMessage').disabled = false
  
 
@@ -653,6 +654,7 @@ window.stopSession = () => {
     document.getElementById('microphone').disabled = true
     document.getElementById('stopSession').disabled = true 
     document.getElementById('chatHistory').hidden = true
+    document.getElementById('cartDisplay').hidden = true
     document.getElementById('showTypeMessage').checked = false
     document.getElementById('showTypeMessage').disabled = true
     document.getElementById('userMessageBox').hidden = true
