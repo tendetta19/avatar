@@ -229,7 +229,7 @@ textarea {
 video {
     background: #222;
     margin: 0 0 20px 0;
-    --width: 100%;
+    --width: 90%;
 	padding-left: 50px;
     width: var(--width);
     height: calc(var(--width) * 1);
@@ -854,8 +854,7 @@ div.collection {
 	font-weight: 50;
   padding-bottom: 10px;
 }
-.flex-container > div {
-  background-color: #f1f1f1;
+.flex-container > div { 
   width: 100px;
   margin: 10px;
   text-align: left;
@@ -874,7 +873,7 @@ div.collection {
 a{
     position: relative;
     display: inline-block;
-    padding: 25px 30px; 
+    padding: 15px 30px; 
     color: #03e9f4;
     text-decoration: none;
     text-transform: uppercase;
