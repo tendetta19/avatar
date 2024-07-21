@@ -833,6 +833,7 @@ div.collection {
     border-radius: 5px;
 	width: 100%;
 	display: flex;
+  height:60px;
 	
   justify-content: center;
 	
@@ -873,8 +874,7 @@ div.collection {
 a{
     position: relative;
     display: inline-block;
-    padding: 25px 30px;
-    margin: 40px 0;
+    padding: 25px 30px; 
     color: #03e9f4;
     text-decoration: none;
     text-transform: uppercase;
