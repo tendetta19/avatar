@@ -19,18 +19,7 @@ var lastSpeakTime
 var imgUrl = ""
 var finalCart = []
 
-// Function to update the cart display
-function updateCartDisplay() {
-    var cartItemsElement = document.getElementById('cartItems');
-    cartItemsElement.innerHTML = ''; // Clear previous items
-
-    finalCart.forEach(function(item) {
-        var li = document.createElement('li');
-        li.textContent = `${item.quantity} ${item.name} - $${(item.price * item.quantity).toFixed(2)}`;
-        cartItemsElement.appendChild(li);
-    });
-}
-
+ 
 
 // Connect to avatar service
 // Connect to avatar service
@@ -238,7 +227,7 @@ function initMessages() {
     messages = []
 
     if (dataSources.length === 0) {
-        let systemPrompt = "You are a MacDonald manager to take orders from customers. You can only take orders for [big mac, cheeseburger, milo and coke].  After the customer has said something, just ask him if he would like anything else, no need to repeat the menu again. Example: Customer: I would like 1 big mac. Response: 1 big mac, anything else? If the customer says he has nothing else to order, say 'Please proceed with checkout' ";
+        let systemPrompt = "You are a MacDonald manager to take orders from customers. You can only take orders for [big mac, cheeseburger, milo and coca-cola].  After the customer has said something, just ask him if he would like anything else, no need to repeat the menu again. Example: Customer: I would like 1 big mac. Response: 1 big mac, anything else? If what the customer says is not part of the items that you are trained on, ask them for their order again. You do not have to give them  the items that you take orders for. If the customer says he has nothing else to order, say 'Please proceed with checkout' ";
         let systemMessage = {
             role: 'system',
             content: systemPrompt
@@ -351,8 +340,8 @@ function speakNext(text, endingSilenceMs = 0) {
 					addToCart('Big Mac', 6.99, lowerText);
 				}
 
-				if (lowerText.includes('coke')) {
-					addToCart('Coke', 1.99, lowerText);
+				if (lowerText.includes('coca-cola')) {
+					addToCart('Coca-cola', 1.99, lowerText);
 				}
 
 				if (lowerText.includes('milo')) {
@@ -399,6 +388,27 @@ function stopSpeaking() {
     )
 }
 
+
+// Function to add a message
+function addMessage(speaker, text, imgUrlPath = '') {
+    let chatHistoryTextArea = document.getElementById('chatHistory'); 
+    let messageDiv = document.createElement('div');
+    messageDiv.className = `message ${speaker}`;
+    
+    let bubbleDiv = document.createElement('div');
+    bubbleDiv.className = 'bubble';
+    
+    bubbleDiv.innerHTML = imgUrlPath.trim() ? imgUrlPath.trim() + text : text;
+    
+    messageDiv.appendChild(bubbleDiv);
+    chatHistoryTextArea.appendChild(messageDiv);
+    
+    chatHistoryTextArea.scrollTop = chatHistoryTextArea.scrollHeight;
+}
+ 
+ 
+ 
+
 function handleUserQuery(userQuery, userQueryHTML, imgUrlPath) {
     let contentMessage = userQuery
     if (imgUrlPath.trim()) {
@@ -425,8 +435,8 @@ function handleUserQuery(userQuery, userQueryHTML, imgUrlPath) {
     if (chatHistoryTextArea.innerHTML !== '' && !chatHistoryTextArea.innerHTML.endsWith('\n\n')) {
         chatHistoryTextArea.innerHTML += '\n\n'
     }
-
-    chatHistoryTextArea.innerHTML += imgUrlPath.trim() ? "<br/><br/>You: " + userQueryHTML : "<br/><br/>You: " + userQuery + "<br/>";
+	addMessage('user', userQueryHTML, userQuery)
+    // chatHistoryTextArea.innerHTML += imgUrlPath.trim() ? "<br/><br/>You: " + userQueryHTML : "<br/><br/>You: " + userQuery + "<br/>";
         
     chatHistoryTextArea.scrollTop = chatHistoryTextArea.scrollHeight
 
@@ -479,7 +489,8 @@ function handleUserQuery(userQuery, userQueryHTML, imgUrlPath) {
         }
 
         let chatHistoryTextArea = document.getElementById('chatHistory')
-        chatHistoryTextArea.innerHTML += imgUrlPath.trim() ? 'MacDonald: ':'<br/>MacDonald: '
+		
+        //chatHistoryTextArea.innerHTML += imgUrlPath.trim() ? 'MacDonald: ':'<br/>MacDonald: '
 
         const reader = response.body.getReader()
 
@@ -561,8 +572,12 @@ function handleUserQuery(userQuery, userQueryHTML, imgUrlPath) {
                     }
                 })
 
-                chatHistoryTextArea.innerHTML += `${displaySentence}`
+                // chatHistoryTextArea.innerHTML += `${displaySentence}`
+				if (displaySentence.trim() != ''){
+					addMessage('bot',  displaySentence, '')
+				} 
                 chatHistoryTextArea.scrollTop = chatHistoryTextArea.scrollHeight
+				
                 displaySentence = ''
 
                 // Continue reading the next chunk
@@ -788,3 +803,81 @@ window.updatePrivateEndpoint = () => {
         document.getElementById('showPrivateEndpointCheckBox').hidden = true
     }
 }
+
+// Existing code...  
+  
+// Function to update the cart display  
+function updateCartDisplay() {  
+    var cartItemsElement = document.getElementById('cartItems');  
+    cartItemsElement.innerHTML = ''; // Clear previous items  
+    finalCart.forEach(function(item, index) {  
+        var li = document.createElement('li');  
+        li.className = 'cart-item';  
+          
+        var img = document.createElement('img');  
+        img.src = getImageUrl(item.name); // Function to get image URL based on item name  
+          
+        var itemName = document.createElement('span');  
+        itemName.textContent = `${item.name} - $${(item.price * item.quantity).toFixed(2)}`;  
+        itemName.style.padding = '10px'; // Add padding of 10px
+        itemName.style.fontSize = '15px';
+          
+        var quantityInput = document.createElement('input');  
+        quantityInput.type = 'number';  
+        quantityInput.value = item.quantity;  
+        quantityInput.min = 1;  
+        quantityInput.max = 999;  
+        quantityInput.onchange = function() {  
+            updateItemQuantity(index, quantityInput.value);  
+        };  
+          
+        var removeButton = document.createElement('button');  
+
+        removeButton.className = 'removeButton';
+        removeButton.textContent = 'X';  
+        removeButton.onclick = function() {  
+            removeItemFromCart(index);  
+        };  
+          
+        li.appendChild(img);  
+        li.appendChild(itemName);  
+        li.appendChild(quantityInput);  
+        li.appendChild(removeButton);  
+        cartItemsElement.appendChild(li);  
+    });  
+}  
+  
+// Function to get image URL based on item name  
+function getImageUrl(itemName) {  
+    switch (itemName.toLowerCase()) {  
+        case 'big mac':  
+            return './image/big_mac.png';  
+        case 'cheeseburger':  
+            return './image/cheeseburger.png';  
+        case 'coca-cola':  
+            return './image/coke.png';  
+        case 'milo':  
+            return './image/milo.png';  
+        default:  
+            return './image/default.png';  
+    }  
+}  
+  
+// Function to update item quantity in the cart  
+function updateItemQuantity(index, quantity) {  
+    finalCart[index].quantity = parseInt(quantity);  
+    updateCartDisplay();  
+}  
+  
+// Function to remove item from the cart  
+function removeItemFromCart(index) {  
+    finalCart.splice(index, 1);  
+    updateCartDisplay();  
+}  
+  
+// Function to handle checkout  
+function checkout() {  
+    // Implement checkout functionality here  
+    alert('Proceeding to checkout with items: ' + JSON.stringify(finalCart));  
+}  
+   

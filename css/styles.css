@@ -283,18 +283,61 @@ textarea {
     color: red;
 }
 
-#cartDisplay {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    width: 300px;
-    padding: 20px;
-    border: 1px solid black; /* Changed to black border */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
+#cartDisplay {  
+    width: 300px;  
+    border: 1px solid black;  
+    border-radius: 10px;  
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  
+    background-color: #fff;  
+    padding: 10px;  
+    position: relative; /* Ensures the button is positioned relative to this div */
+    padding-bottom: 50px; 
+}  
+  
+.bottom-right {
+  position: absolute;
+  bottom: 10px;
+  right: 50px;
 }
 
+#cartItems {  
+    list-style-type: none;  
+    padding: 0;  
+}  
+  
+.cart-item {  
+    display: flex;  
+    align-items: center;  
+    margin-bottom: 10px;  
+}  
+  
+.cart-item img {  
+    width: 50px;  
+    height: 50px;  
+    margin-right: 10px;  
+}  
+  
+.cart-item input[type="number"] {  
+    width: 50px;  
+    margin-right: 10px;  
+}  
+  
+#checkoutButton {  
+    background-color: #d84a38;  
+    border: none;  
+    border-radius: 2px;  
+    color: white;  
+    font-family: 'Roboto', sans-serif;  
+    font-size: 0.8em;  
+    padding: 0.5em 0.7em;  
+    cursor: pointer;  
+    display: block;  
+    margin: 10px auto;  
+}  
+  
+#checkoutButton:hover {  
+    background-color: #cf402f;  
+}  
 
 /* The switch - the box around the slider */
 .switch {
@@ -806,14 +849,20 @@ div.collection {
 }
 
 
-
+.header {
+	font-size: 20px;
+	padding-top: 10px;
+	padding-left: 10px;
+	font-weight: 50;
+  padding-bottom: 10px;
+}
 .flex-container > div {
   background-color: #f1f1f1;
   width: 100px;
   margin: 10px;
   text-align: left;
   line-height: 20px;
-  font-size: 30px;
+  font-size: 10px;
 }
 
 
@@ -926,3 +975,105 @@ a span:nth-child(4){
         bottom: 100%;
     }
 }
+
+
+.remove-button {
+  padding: 10px 20px; /* Adjust padding to make the button bigger */
+  font-size: 16px; /* Adjust font size */
+  border-radius: 5px; /* Optional: rounded corners */
+  border: none; /* Remove border */
+  background-color: #f44336; /* Background color */
+  color: white; /* Text color */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+.remove-button:hover {
+  background-color: #d32f2f; /* Darker background color on hover */
+}
+
+#checkoutButton {
+  padding: 12px 24px; /* Add padding for size */
+  font-size: 18px; /* Adjust font size */
+  border-radius: 5px; /* Rounded corners */
+  border: none; /* Remove border */
+  background-color: #4CAF50; /* Background color */
+  color: white; /* Text color */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
+}
+
+#checkoutButton:hover {
+  background-color: #45a049; /* Darker background color on hover */
+}
+
+#checkoutButton:active {
+  transform: scale(0.98); /* Slightly scale down on click */
+}
+
+
+     #chatHistory {
+        padding: 10px;
+        font-family: Arial, sans-serif;
+    }
+    
+    .message {
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .message.user {
+        justify-content: flex-end;
+    }
+    
+    .message.bot {
+        justify-content: flex-start;
+    }
+    
+    .message .bubble {
+        max-width: 70%;
+        padding: 10px;
+        border-radius: 15px;
+        background-color: #f1f0f0;
+        position: relative;
+        animation: fadeIn 0.5s;
+    }
+    
+    .message.user .bubble {
+        background-color: #d1e7ff;
+    }
+    
+    .message.bot .bubble {
+        background-color: #e1f5e1;
+    }
+    
+    .message .bubble::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 0;
+        border: 10px solid transparent;
+    }
+    
+    .message.user .bubble::after {
+        right: -20px;
+        top: 50%;
+        border-left: 10px solid #d1e7ff;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        transform: translateY(-50%);
+    }
+    
+    .message.bot .bubble::after {
+        left: -20px;
+        top: 50%;
+        border-right: 10px solid #e1f5e1;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        transform: translateY(-50%);
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }

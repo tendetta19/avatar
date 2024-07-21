@@ -160,13 +160,25 @@
             font-size: medium;
             border: none;
             resize: none;
+    border-radius: 10px;
             background-color: white;
             justify: left;
-            overflow: hidden;" contentEditable="false" hidden></div>
-         <div id="cartDisplay" style="top: 180px;right: 20px;" hidden>
-            <h2>Your Cart</h2>
-            <ul id="cartItems"></ul>
-         </div>
+            overflow: hidden;" contentEditable="false" hidden> 
+			<h2 class = "header" style="
+        position: sticky;
+        top: 0;
+        margin: 0;
+        z-index: 1; 
+        background-color: rgba(255, 255, 255, 1.0); /* White with 80% opacity */
+    ">Chat History </h2>
+			</div>
+<div id="cartDisplay" hidden>  
+        <h2 class="header">Your Cart</h2>  
+        <ul id="cartItems"></ul>  
+
+        <button id="checkoutButton" class="bottom-right" onclick="checkout()">Proceed to Checkout</button>
+ 
+    </div>  
       </div>
       <div margin-top="5px">
          <div id="showTypeMessageCheckbox">
