@@ -297,7 +297,8 @@ textarea {
 .bottom-right {
   position: absolute;
   bottom: 10px;
-  right: 50px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 #cartItems {  
