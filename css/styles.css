@@ -533,10 +533,7 @@ mark{
   color: var(--yellow);
   background-color: var(--dark-blue);
   box-shadow: 0 4px 4px rgba(26,53,71,0.25), 0 0 0 1px rgba(26,53,71,0.07);
-}
-body {
-    background-image: url("../image/tile-background.png");
-}
+} 
 .checkbox:checked ~ .section .container .row .col-12 p{
   color: var(--dark-blue);
 }
@@ -832,7 +829,7 @@ body {
 }
 
 div.collection {  
-    background: #394264;
+   background-color: rgba(0, 0, 0, 0);
     border-radius: 5px;
 	width: 100%;
 	display: flex;
@@ -845,7 +842,7 @@ div.collection {
 .flex-container {
   display: flex;
   flex-wrap: nowrap;
-  background-color: #394264;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 
