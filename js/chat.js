@@ -227,7 +227,7 @@ function initMessages() {
     messages = []
 
     if (dataSources.length === 0) {
-        let systemPrompt = "You are a MacDonald manager to take orders from customers. You can only take orders for [big mac, cheeseburger, milo and coca-cola].  After the customer has said something, just ask him if he would like anything else, no need to repeat the menu again. Example: Customer: I would like 1 big mac. Response: 1 big mac, anything else? If what the customer says is not part of the items that you are trained on, ask them for their order again. You do not have to give them  the items that you take orders for. If the customer says he has nothing else to order, say 'Please proceed with checkout' ";
+        let systemPrompt = "You are a MacDonald manager to take orders from customers. You can do 2 functions. Take orders from customers and cancel orders for customers. If the customer wants to take orders, you can only take orders for [big mac, cheeseburger, milo and coca-cola]. If the customer wants to remove items, you can also remove items from the cart that the user has oredered or remove specific items from the cart if the user tells you to do so. E.g The customer says I would like 1 Cheeseburger removed or remove cheeseburger. Tell him that 1 cheeseburger has been removed from the cart, depending on the quantity in numbers. After the customer has said something, just ask him if he would like anything else, no need to repeat the menu again. Example: Customer: I would like 1 big mac. Response: 1 big mac, anything else? If what the customer says is not part of the items that you are trained on, ask them for their order again unless they are telling to clear their cart or remove an item for their cart. You do not have to give them  the items that you take orders for. If the customer says he has nothing else to order, say 'Please proceed with checkout'. If the user says Clear Cart or anything along the lines or clearing cart, repeat back 'Cart has been cleared' Nothing else is to be included in the message";
         let systemMessage = {
             role: 'system',
             content: systemPrompt
@@ -318,83 +318,117 @@ function addToCart(itemName, itemPrice, lowerText) {
 function emptyCart() {
     const cartItems = document.getElementById('cartItems');
     cartItems.innerHTML = ''; 
+    finalCart = [];
 }
 
 function removeItem(itemName) {
-    const cartItems = document.getElementById('cartItems');
-    const items = cartItems.getElementsByClassName('cart-item');
-    for (let i = 0; i < items.length; i++) {
-        if (items[i].innerText.includes(itemName)) {
-            items[i].remove();
-            console.log(itemName + " has been removed from the cart");
-            break;
+    let quantityToRemove = extractQuantity(lowerText);
+    // Find the item in the cart
+    let existingItem = finalCart.find(item => item.name.toLowerCase() === itemName.toLowerCase());
+    
+    if (existingItem) {
+        if (existingItem.quantity <= quantityToRemove) {
+            // If there's not enough quantity, remove the item completely
+            finalCart = finalCart.filter(item => item.name.toLowerCase() !== itemName.toLowerCase());
+        } else {
+            // Otherwise, just reduce the quantity
+            existingItem.quantity -= quantityToRemove;
         }
+        updateCartDisplay(); // Update cart display
     }
 }
 
 function speakNext(text, endingSilenceMs = 0) {
-    let ttsVoice = document.getElementById('ttsVoice').value
-    let personalVoiceSpeakerProfileID = document.getElementById('personalVoiceSpeakerProfileID').value
-    let ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='http://www.w3.org/2001/mstts' xml:lang='en-US'><voice name='${ttsVoice}'><mstts:ttsembedding speakerProfileId='${personalVoiceSpeakerProfileID}'><mstts:leadingsilence-exact value='0'/>${htmlEncode(text)}</mstts:ttsembedding></voice></speak>`
+    let ttsVoice = document.getElementById('ttsVoice').value;
+    let personalVoiceSpeakerProfileID = document.getElementById('personalVoiceSpeakerProfileID').value;
+    let ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='http://www.w3.org/2001/mstts' xml:lang='en-US'><voice name='${ttsVoice}'><mstts:ttsembedding speakerProfileId='${personalVoiceSpeakerProfileID}'><mstts:leadingsilence-exact value='0'/>${htmlEncode(text)}</mstts:ttsembedding></voice></speak>`;
     if (endingSilenceMs > 0) {
-        ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='http://www.w3.org/2001/mstts' xml:lang='en-US'><voice name='${ttsVoice}'><mstts:ttsembedding speakerProfileId='${personalVoiceSpeakerProfileID}'><mstts:leadingsilence-exact value='0'/>${htmlEncode(text)}<break time='${endingSilenceMs}ms' /></mstts:ttsembedding></voice></speak>`
+        ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='http://www.w3.org/2001/mstts' xml:lang='en-US'><voice name='${ttsVoice}'><mstts:ttsembedding speakerProfileId='${personalVoiceSpeakerProfileID}'><mstts:leadingsilence-exact value='0'/>${htmlEncode(text)}<break time='${endingSilenceMs}ms' /></mstts:ttsembedding></voice></speak>`;
     }
 
-    lastSpeakTime = new Date()
-    isSpeaking = true
-    document.getElementById('stopSpeaking').disabled = false
+    lastSpeakTime = new Date();
+    isSpeaking = true;
+    document.getElementById('stopSpeaking').disabled = false;
     avatarSynthesizer.speakSsmlAsync(ssml).then(
         (result) => {
             if (result.reason === SpeechSDK.ResultReason.SynthesizingAudioCompleted) {
-                console.log(`Speech synthesized to speaker for text [ ${text} ]. Result ID: ${result.resultId}`)
-                lastSpeakTime = new Date()
-				var lowerText = text.toLowerCase();
+                console.log(`Speech synthesized to speaker for text [ ${text} ]. Result ID: ${result.resultId}`);
+                lastSpeakTime = new Date();
+                var lowerText = text.toLowerCase();
 
-                    // Check for empty cart command
-                if (lowerText.includes("Cart cleared") || lowerText.includes("Cart emptied")) {
+                // Check for empty cart command
+                if (lowerText.includes("cart has been cleared") || lowerText.includes("cart emptied")) {
                     emptyCart();
                     return;
                 }
-    
-				if (lowerText.includes('cheeseburger')) {
-					addToCart('Cheeseburger', 5.99, lowerText);
-				}
 
-				if (lowerText.includes('big mac')) {
-					addToCart('Big Mac', 6.99, lowerText);
-				}
+                // Detect removal
+                if (lowerText.includes('removed')) {
+                    const removedPattern = /(\d+)\s*(\w+)\s*has\s*been\s*removed/;
+                    const match = lowerText.match(removedPattern); 
+                    if (match) {
+                        const quantity = parseInt(match[1], 10);
+                        const product = match[2];  
+                        removeFromCart(product, quantity);
+                    }
+                } else {
+                    if (lowerText.includes('cheeseburger')) {
+                        addToCart('Cheeseburger', 5.99, lowerText);
+                    }
 
-				if (lowerText.includes('coca-cola')) {
-					addToCart('Coca-cola', 1.99, lowerText);
-				}
+                    if (lowerText.includes('big mac')) {
+                        addToCart('Big Mac', 6.99, lowerText);
+                    }
 
-				if (lowerText.includes('milo')) {
-					addToCart('Milo', 2.49, lowerText);
-				}
-				updateCartDisplay();
+                    if (lowerText.includes('coca-cola')) {
+                        addToCart('Coca-cola', 1.99, lowerText);
+                    }
+
+                    if (lowerText.includes('milo')) {
+                        addToCart('Milo', 2.49, lowerText);
+                    }
+                }
+
+                updateCartDisplay();
             } else {
-                console.log(`Error occurred while speaking the SSML. Result ID: ${result.resultId}`)
+                console.log(`Error occurred while speaking the SSML. Result ID: ${result.resultId}`);
             }
 
             if (spokenTextQueue.length > 0) {
-                speakNext(spokenTextQueue.shift())
+                speakNext(spokenTextQueue.shift());
             } else {
-                isSpeaking = false
-                document.getElementById('stopSpeaking').disabled = true
+                isSpeaking = false;
+                document.getElementById('stopSpeaking').disabled = true;
             }
-			 
+
         }).catch(
             (error) => {
-                console.log(`Error occurred while speaking the SSML: [ ${error} ]`)
+                console.log(`Error occurred while speaking the SSML: [ ${error} ]`);
 
                 if (spokenTextQueue.length > 0) {
-                    speakNext(spokenTextQueue.shift())
+                    speakNext(spokenTextQueue.shift());
                 } else {
-                    isSpeaking = false
-                    document.getElementById('stopSpeaking').disabled = true
+                    isSpeaking = false;
+                    document.getElementById('stopSpeaking').disabled = true;
                 }
             }
-        )
+        );
+}
+
+function removeFromCart(product, quantity) {
+    // Find the item in the cart
+    let existingItem = finalCart.find(item => item.name.toLowerCase() === product.toLowerCase());
+    
+    if (existingItem) {
+        if (existingItem.quantity <= quantity) {
+            // If there's not enough quantity, remove the item completely
+            finalCart = finalCart.filter(item => item.name.toLowerCase() !== product.toLowerCase());
+        } else {
+            // Otherwise, just reduce the quantity
+            existingItem.quantity -= quantity;
+        }
+        updateCartDisplay(); // Update cart display
+    } 
 }
 
 function stopSpeaking() {
