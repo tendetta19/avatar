@@ -315,6 +315,23 @@ function addToCart(itemName, itemPrice, lowerText) {
     updateCartDisplay(); // Update cart display
 }
 
+function emptyCart() {
+    const cartItems = document.getElementById('cartItems');
+    cartItems.innerHTML = ''; 
+}
+
+function removeItem(itemName) {
+    const cartItems = document.getElementById('cartItems');
+    const items = cartItems.getElementsByClassName('cart-item');
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].innerText.includes(itemName)) {
+            items[i].remove();
+            console.log(itemName + " has been removed from the cart");
+            break;
+        }
+    }
+}
+
 function speakNext(text, endingSilenceMs = 0) {
     let ttsVoice = document.getElementById('ttsVoice').value
     let personalVoiceSpeakerProfileID = document.getElementById('personalVoiceSpeakerProfileID').value
@@ -332,6 +349,13 @@ function speakNext(text, endingSilenceMs = 0) {
                 console.log(`Speech synthesized to speaker for text [ ${text} ]. Result ID: ${result.resultId}`)
                 lastSpeakTime = new Date()
 				var lowerText = text.toLowerCase();
+
+                    // Check for empty cart command
+                if (lowerText.includes("Cart cleared") || lowerText.includes("Cart emptied")) {
+                    emptyCart();
+                    return;
+                }
+    
 				if (lowerText.includes('cheeseburger')) {
 					addToCart('Cheeseburger', 5.99, lowerText);
 				}
