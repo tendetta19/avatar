@@ -972,3 +972,14 @@ function handleClick() {
   }
   document.querySelector('.finish-loading').classList.add('disableButton');
 } 
+
+function startSession() {
+    document.getElementById('chatHistory').style.visibility = 'visible';
+    document.getElementById('chatHistoryHeader').style.visibility = 'visible';
+    document.getElementById('chatHistoryContent').style.visibility = 'visible';
+
+    document.getElementById('chatHistory').removeAttribute('hidden');
+    document.getElementById('chatHistoryHeader').removeAttribute('hidden');
+    document.getElementById('chatHistoryContent').removeAttribute('hidden');
+}
+ 
