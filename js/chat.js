@@ -8,9 +8,9 @@ var peerConnection
 var messages = []
 var messageInitiated = false
 var dataSources = []
-var sentenceLevelPunctuations = [ '.', '?', '!', ':', ';', '。', '？', '！', '：', '；' ]
+var sentenceLevelPunctuations = ['.', '?', '!', ':', ';', '。', '？', '！', '：', '；']
 var enableQuickReply = false
-var quickReplies = [ 'Let me take a look.', 'Let me check.', 'One moment, please.' ]
+var quickReplies = ['Let me take a look.', 'Let me check.', 'One moment, please.']
 var byodDocRegex = new RegExp(/\[doc(\d+)\]/g)
 var isSpeaking = false
 var spokenTextQueue = []
@@ -19,13 +19,13 @@ var lastSpeakTime
 var imgUrl = ""
 var finalCart = []
 
- 
+
 
 // Connect to avatar service
 // Connect to avatar service
 function connectAvatar() {
     const cogSvcRegion = "westus2";
-    const cogSvcSubKey = "27506bcd68114a929ef02cacc8f6b279"; 
+    const cogSvcSubKey = "27506bcd68114a929ef02cacc8f6b279";
     if (cogSvcSubKey === '') {
         alert('Please fill in the subscription key of your speech resource.');
         return;
@@ -33,7 +33,7 @@ function connectAvatar() {
 
     const privateEndpointEnabled = false;
     const privateEndpoint = "";
-    
+
     if (privateEndpointEnabled && privateEndpoint === '') {
         alert('Please fill in the Azure Speech endpoint.');
         return;
@@ -44,15 +44,15 @@ function connectAvatar() {
         speechSynthesisConfig = SpeechSDK.SpeechConfig.fromEndpoint(new URL(`wss://${privateEndpoint}/tts/cognitiveservices/websocket/v1?enableTalkingAvatar=true`), cogSvcSubKey);
     } else {
         speechSynthesisConfig = SpeechSDK.SpeechConfig.fromSubscription(cogSvcSubKey, cogSvcRegion);
-    } 
+    }
 
     speechSynthesisConfig.endpointId = "";
-	
+
     const talkingAvatarCharacter = "lisa";
-    const talkingAvatarStyle = "casual-sitting"; 
-	
-    const avatarConfig = new SpeechSDK.AvatarConfig(talkingAvatarCharacter, talkingAvatarStyle);  
-	
+    const talkingAvatarStyle = "casual-sitting";
+
+    const avatarConfig = new SpeechSDK.AvatarConfig(talkingAvatarCharacter, talkingAvatarStyle);
+
     avatarSynthesizer = new SpeechSDK.AvatarSynthesizer(speechSynthesisConfig, avatarConfig);
     avatarSynthesizer.avatarEventReceived = function (s, e) {
         var offsetMessage = ", offset from session start: " + e.offset / 10000 + "ms.";
@@ -65,16 +65,16 @@ function connectAvatar() {
 
     const speechRecognitionConfig = SpeechSDK.SpeechConfig.fromEndpoint(new URL(`wss://${cogSvcRegion}.stt.speech.microsoft.com/speech/universal/v2`), cogSvcSubKey);
     speechRecognitionConfig.setProperty(SpeechSDK.PropertyId.SpeechServiceConnection_LanguageIdMode, "Continuous");
-    var sttLocales = ["en-US","de-DE","es-ES","fr-FR","it-IT","ja-JP","ko-KR","zh-CN"];
-    var autoDetectSourceLanguageConfig = SpeechSDK.AutoDetectSourceLanguageConfig.fromLanguages(sttLocales); 
+    var sttLocales = ["en-US", "de-DE", "es-ES", "fr-FR", "it-IT", "ja-JP", "ko-KR", "zh-CN"];
+    var autoDetectSourceLanguageConfig = SpeechSDK.AutoDetectSourceLanguageConfig.fromLanguages(sttLocales);
 
     speechRecognizer = SpeechSDK.SpeechRecognizer.FromConfig(speechRecognitionConfig, autoDetectSourceLanguageConfig, SpeechSDK.AudioConfig.fromDefaultMicrophoneInput());
- 
+
 
     const azureOpenAIEndpoint = "https://justin-openai-demo.openai.azure.com/";
     const azureOpenAIApiKey = "1a1f8c2855a44483bbd3ef4c838996c8";
-    const azureOpenAIDeploymentName = "justin-gpt-4o"; 
-	
+    const azureOpenAIDeploymentName = "justin-gpt-4o";
+
     if (azureOpenAIEndpoint === '' || azureOpenAIApiKey === '' || azureOpenAIDeploymentName === '') {
         alert('Please fill in the Azure OpenAI endpoint, API key and deployment name.');
         return;
@@ -88,7 +88,7 @@ function connectAvatar() {
         messageInitiated = true;
     }
 
-    document.getElementById('startSession').disabled = true; 
+    document.getElementById('startSession').disabled = true;
 
     const xhr = new XMLHttpRequest();
     if (privateEndpointEnabled) {
@@ -97,7 +97,7 @@ function connectAvatar() {
         xhr.open("GET", `https://${cogSvcRegion}.tts.speech.microsoft.com/cognitiveservices/avatar/relay/token/v1`);
     }
     xhr.setRequestHeader("Ocp-Apim-Subscription-Key", cogSvcSubKey);
-    xhr.addEventListener("readystatechange", function() {
+    xhr.addEventListener("readystatechange", function () {
         if (this.readyState === 4) {
             const responseData = JSON.parse(this.responseText);
             const iceServerUrl = responseData.Urls[0];
@@ -129,7 +129,7 @@ function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential) {
     // Create WebRTC peer connection
     peerConnection = new RTCPeerConnection({
         iceServers: [{
-            urls: [ iceServerUrl ],
+            urls: [iceServerUrl],
             username: iceServerUsername,
             credential: iceServerCredential
         }]
@@ -172,11 +172,11 @@ function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential) {
                 console.log(`WebRTC ${event.track.kind} channel connected.`)
                 document.getElementById('microphone').disabled = false
                 document.getElementById('stopSession').disabled = false
-                document.getElementById('remoteVideo').style.width = '900px' 
+                document.getElementById('remoteVideo').style.width = '900px'
                 document.getElementById('chatHistory').style.visibility = 'visible';
                 document.getElementById('chatHistoryHeader').style.visibility = 'visible';
                 document.getElementById('chatHistoryContent').style.visibility = 'visible';
-            
+
                 // Remove the 'hidden' attribute if it's set
                 document.getElementById('chatHistory').removeAttribute('hidden');
                 document.getElementById('chatHistoryHeader').removeAttribute('hidden');
@@ -185,7 +185,7 @@ function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential) {
                 document.getElementById('chatHistoryContent').style.visibility = 'visible';
                 document.getElementById('cartDisplay').hidden = false
                 document.getElementById('showTypeMessage').disabled = false
- 
+
 
                 setTimeout(() => { sessionActive = true }, 5000) // Set session active after 5 seconds
             }
@@ -221,12 +221,12 @@ function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential) {
 
                 console.log("Unable to start avatar: " + cancellationDetails.errorDetails);
             }
-            document.getElementById('startSession').disabled = false; 
+            document.getElementById('startSession').disabled = false;
         }
     }).catch(
         (error) => {
             console.log("[" + (new Date()).toISOString() + "] Avatar failed to start. Error: " + error)
-            document.getElementById('startSession').disabled = false 
+            document.getElementById('startSession').disabled = false
         }
     )
 }
@@ -274,12 +274,12 @@ function setDataSources(azureCogSearchEndpoint, azureCogSearchApiKey, azureCogSe
 // Do HTML encoding on given text
 function htmlEncode(text) {
     const entityMap = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#39;',
-      '/': '&#x2F;'
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+        '/': '&#x2F;'
     };
 
     return String(text).replace(/[&<>"'\/]/g, (match) => entityMap[match])
@@ -326,7 +326,7 @@ function addToCart(itemName, itemPrice, lowerText) {
 
 function emptyCart() {
     const cartItems = document.getElementById('cartItems');
-    cartItems.innerHTML = ''; 
+    cartItems.innerHTML = '';
     finalCart = [];
 }
 
@@ -334,7 +334,7 @@ function removeItem(itemName) {
     let quantityToRemove = extractQuantity(lowerText);
     // Find the item in the cart
     let existingItem = finalCart.find(item => item.name.toLowerCase() === itemName.toLowerCase());
-    
+
     if (existingItem) {
         if (existingItem.quantity <= quantityToRemove) {
             // If there's not enough quantity, remove the item completely
@@ -374,10 +374,10 @@ function speakNext(text, endingSilenceMs = 0) {
                 // Detect removal
                 if (lowerText.includes('removed')) {
                     const removedPattern = /(\d+)\s*(\w+)\s*has\s*been\s*removed/;
-                    const match = lowerText.match(removedPattern); 
+                    const match = lowerText.match(removedPattern);
                     if (match) {
                         const quantity = parseInt(match[1], 10);
-                        const product = match[2];  
+                        const product = match[2];
                         removeFromCart(product, quantity);
                     }
                 } else {
@@ -427,7 +427,7 @@ function speakNext(text, endingSilenceMs = 0) {
 function removeFromCart(product, quantity) {
     // Find the item in the cart
     let existingItem = finalCart.find(item => item.name.toLowerCase() === product.toLowerCase());
-    
+
     if (existingItem) {
         if (existingItem.quantity <= quantity) {
             // If there's not enough quantity, remove the item completely
@@ -437,7 +437,7 @@ function removeFromCart(product, quantity) {
             existingItem.quantity -= quantity;
         }
         updateCartDisplay(); // Update cart display
-    } 
+    }
 }
 
 function stopSpeaking() {
@@ -458,33 +458,33 @@ function stopSpeaking() {
 
 // Function to add a message
 function addMessage(speaker, text, imgUrlPath = '') {
-    let chatHistoryTextArea = document.getElementById('chatHistoryContent'); 
+    let chatHistoryTextArea = document.getElementById('chatHistoryContent');
     let messageDiv = document.createElement('div');
     messageDiv.className = `message ${speaker}`;
-    
+
     let bubbleDiv = document.createElement('div');
     bubbleDiv.className = 'bubble';
-    
+
     bubbleDiv.innerHTML = imgUrlPath.trim() ? imgUrlPath.trim() + text : text;
-    
+
     messageDiv.appendChild(bubbleDiv);
     chatHistoryTextArea.appendChild(messageDiv);
-    
+
     chatHistoryTextArea.scrollTop = chatHistoryTextArea.scrollHeight;
 }
- 
- 
- 
+
+
+
 
 function handleUserQuery(userQuery, userQueryHTML, imgUrlPath) {
     let contentMessage = userQuery
     if (imgUrlPath.trim()) {
-        contentMessage = [  
-            { 
-                "type": "text", 
-                "text": userQuery 
+        contentMessage = [
+            {
+                "type": "text",
+                "text": userQuery
             },
-            { 
+            {
                 "type": "image_url",
                 "image_url": {
                     "url": imgUrlPath
@@ -502,9 +502,9 @@ function handleUserQuery(userQuery, userQueryHTML, imgUrlPath) {
     if (chatHistoryTextArea.innerHTML !== '' && !chatHistoryTextArea.innerHTML.endsWith('\n\n')) {
         chatHistoryTextArea.innerHTML += '\n\n'
     }
-	addMessage('user', userQueryHTML, userQuery)
+    addMessage('user', userQueryHTML, userQuery)
     // chatHistoryTextArea.innerHTML += imgUrlPath.trim() ? "<br/><br/>You: " + userQueryHTML : "<br/><br/>You: " + userQuery + "<br/>";
-        
+
     chatHistoryTextArea.scrollTop = chatHistoryTextArea.scrollHeight
 
     // Stop previous speaking if there is any
@@ -520,7 +520,7 @@ function handleUserQuery(userQuery, userQueryHTML, imgUrlPath) {
 
     const azureOpenAIEndpoint = "https://justin-openai-demo.openai.azure.com/";
     const azureOpenAIApiKey = "1a1f8c2855a44483bbd3ef4c838996c8";
-    const azureOpenAIDeploymentName = "justin-gpt-4o"; 
+    const azureOpenAIDeploymentName = "justin-gpt-4o";
 
     let url = "{AOAIEndpoint}/openai/deployments/{AOAIDeployment}/chat/completions?api-version=2023-06-01-preview".replace("{AOAIEndpoint}", azureOpenAIEndpoint).replace("{AOAIDeployment}", azureOpenAIDeploymentName)
     let body = JSON.stringify({
@@ -550,133 +550,133 @@ function handleUserQuery(userQuery, userQueryHTML, imgUrlPath) {
         },
         body: body
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`Chat API response status: ${response.status} ${response.statusText}`)
-        }
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Chat API response status: ${response.status} ${response.statusText}`)
+            }
 
-        let chatHistoryTextArea = document.getElementById('chatHistoryContent')
-		
-        //chatHistoryTextArea.innerHTML += imgUrlPath.trim() ? 'MacDonald: ':'<br/>MacDonald: '
+            let chatHistoryTextArea = document.getElementById('chatHistoryContent')
 
-        const reader = response.body.getReader()
+            //chatHistoryTextArea.innerHTML += imgUrlPath.trim() ? 'MacDonald: ':'<br/>MacDonald: '
 
-        // Function to recursively read chunks from the stream
-        function read(previousChunkString = '') {
-            return reader.read().then(({ value, done }) => {
-                // Check if there is still data to read
-                if (done) {
-                    // Stream complete
-                    return
-                }
+            const reader = response.body.getReader()
 
-                // Process the chunk of data (value)
-                let chunkString = new TextDecoder().decode(value, { stream: true })
-                if (previousChunkString !== '') {
-                    // Concatenate the previous chunk string in case it is incomplete
-                    chunkString = previousChunkString + chunkString
-                }
+            // Function to recursively read chunks from the stream
+            function read(previousChunkString = '') {
+                return reader.read().then(({ value, done }) => {
+                    // Check if there is still data to read
+                    if (done) {
+                        // Stream complete
+                        return
+                    }
 
-                if (!chunkString.endsWith('}\n\n') && !chunkString.endsWith('[DONE]\n\n')) {
-                    // This is a incomplete chunk, read the next chunk
-                    return read(chunkString)
-                }
+                    // Process the chunk of data (value)
+                    let chunkString = new TextDecoder().decode(value, { stream: true })
+                    if (previousChunkString !== '') {
+                        // Concatenate the previous chunk string in case it is incomplete
+                        chunkString = previousChunkString + chunkString
+                    }
 
-                chunkString.split('\n\n').forEach((line) => {
-                    try {
-                        if (line.startsWith('data:') && !line.endsWith('[DONE]')) {
-                            const responseJson = JSON.parse(line.substring(5).trim())
-                            let responseToken = undefined
-                            if (dataSources.length === 0) {
-                                responseToken = responseJson.choices[0].delta.content
-                            } else {
-                                let role = responseJson.choices[0].messages[0].delta.role
-                                if (role === 'tool') {
-                                    toolContent = responseJson.choices[0].messages[0].delta.content
+                    if (!chunkString.endsWith('}\n\n') && !chunkString.endsWith('[DONE]\n\n')) {
+                        // This is a incomplete chunk, read the next chunk
+                        return read(chunkString)
+                    }
+
+                    chunkString.split('\n\n').forEach((line) => {
+                        try {
+                            if (line.startsWith('data:') && !line.endsWith('[DONE]')) {
+                                const responseJson = JSON.parse(line.substring(5).trim())
+                                let responseToken = undefined
+                                if (dataSources.length === 0) {
+                                    responseToken = responseJson.choices[0].delta.content
                                 } else {
-                                    responseToken = responseJson.choices[0].messages[0].delta.content
-                                    if (responseToken !== undefined) {
-                                        if (byodDocRegex.test(responseToken)) {
-                                            responseToken = responseToken.replace(byodDocRegex, '').trim()
-                                        }
+                                    let role = responseJson.choices[0].messages[0].delta.role
+                                    if (role === 'tool') {
+                                        toolContent = responseJson.choices[0].messages[0].delta.content
+                                    } else {
+                                        responseToken = responseJson.choices[0].messages[0].delta.content
+                                        if (responseToken !== undefined) {
+                                            if (byodDocRegex.test(responseToken)) {
+                                                responseToken = responseToken.replace(byodDocRegex, '').trim()
+                                            }
 
-                                        if (responseToken === '[DONE]') {
-                                            responseToken = undefined
+                                            if (responseToken === '[DONE]') {
+                                                responseToken = undefined
+                                            }
                                         }
                                     }
                                 }
-                            }
 
-                            if (responseToken !== undefined && responseToken !== null) {
-                                assistantReply += responseToken // build up the assistant message
-                                displaySentence += responseToken // build up the display sentence
+                                if (responseToken !== undefined && responseToken !== null) {
+                                    assistantReply += responseToken // build up the assistant message
+                                    displaySentence += responseToken // build up the display sentence
 
-                                // console.log(`Current token: ${responseToken}`)
+                                    // console.log(`Current token: ${responseToken}`)
 
-                                if (responseToken === '\n' || responseToken === '\n\n') {
-                                    speak(spokenSentence.trim())
-                                    spokenSentence = ''
-                                } else {
-                                    responseToken = responseToken.replace(/\n/g, '')
-                                    spokenSentence += responseToken // build up the spoken sentence
+                                    if (responseToken === '\n' || responseToken === '\n\n') {
+                                        speak(spokenSentence.trim())
+                                        spokenSentence = ''
+                                    } else {
+                                        responseToken = responseToken.replace(/\n/g, '')
+                                        spokenSentence += responseToken // build up the spoken sentence
 
-                                    if (responseToken.length === 1 || responseToken.length === 2) {
-                                        for (let i = 0; i < sentenceLevelPunctuations.length; ++i) {
-                                            let sentenceLevelPunctuation = sentenceLevelPunctuations[i]
-                                            if (responseToken.startsWith(sentenceLevelPunctuation)) {
-                                                speak(spokenSentence.trim())
-                                                spokenSentence = ''
-                                                break
+                                        if (responseToken.length === 1 || responseToken.length === 2) {
+                                            for (let i = 0; i < sentenceLevelPunctuations.length; ++i) {
+                                                let sentenceLevelPunctuation = sentenceLevelPunctuations[i]
+                                                if (responseToken.startsWith(sentenceLevelPunctuation)) {
+                                                    speak(spokenSentence.trim())
+                                                    spokenSentence = ''
+                                                    break
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
+                        } catch (error) {
+                            console.log(`Error occurred while parsing the response: ${error}`)
+                            console.log(chunkString)
                         }
-                    } catch (error) {
-                        console.log(`Error occurred while parsing the response: ${error}`)
-                        console.log(chunkString)
+                    })
+
+                    // chatHistoryTextArea.innerHTML += `${displaySentence}`
+                    if (displaySentence.trim() != '') {
+                        addMessage('bot', displaySentence, '')
                     }
+                    chatHistoryTextArea.scrollTop = chatHistoryTextArea.scrollHeight
+
+                    displaySentence = ''
+
+                    // Continue reading the next chunk
+                    return read()
                 })
-
-                // chatHistoryTextArea.innerHTML += `${displaySentence}`
-				if (displaySentence.trim() != ''){
-					addMessage('bot',  displaySentence, '')
-				} 
-                chatHistoryTextArea.scrollTop = chatHistoryTextArea.scrollHeight
-				
-                displaySentence = ''
-
-                // Continue reading the next chunk
-                return read()
-            })
-        }
-
-        // Start reading the stream
-        return read()
-    })
-    .then(() => {
-        if (spokenSentence !== '') {
-            speak(spokenSentence.trim())
-            spokenSentence = ''
-        }
-
-        if (dataSources.length > 0) {
-            let toolMessage = {
-                role: 'tool',
-                content: toolContent
             }
 
-            messages.push(toolMessage)
-        }
+            // Start reading the stream
+            return read()
+        })
+        .then(() => {
+            if (spokenSentence !== '') {
+                speak(spokenSentence.trim())
+                spokenSentence = ''
+            }
 
-        let assistantMessage = {
-            role: 'assistant',
-            content: assistantReply
-        }
+            if (dataSources.length > 0) {
+                let toolMessage = {
+                    role: 'tool',
+                    content: toolContent
+                }
 
-        messages.push(assistantMessage)
-    })
+                messages.push(toolMessage)
+            }
+
+            let assistantMessage = {
+                role: 'assistant',
+                content: assistantReply
+            }
+
+            messages.push(assistantMessage)
+        })
 }
 
 function getQuickReply() {
@@ -734,8 +734,8 @@ window.startSession = () => {
 window.stopSession = () => {
     document.getElementById('startSession').disabled = false
     document.getElementById('microphone').disabled = true
-    document.getElementById('stopSession').disabled = true 
-    document.getElementById('chatHistory').hidden = true 
+    document.getElementById('stopSession').disabled = true
+    document.getElementById('chatHistory').hidden = true
     document.getElementById('chatHistoryHeader').hidden = true
     document.getElementById('chatHistoryContent').hidden = true
     document.getElementById('cartDisplay').hidden = true
@@ -772,7 +772,7 @@ window.microphone = () => {
         return
     }
 
- 
+
 
     document.getElementById('microphone').disabled = true
     speechRecognizer.recognized = async (s, e) => {
@@ -795,7 +795,7 @@ window.microphone = () => {
                     })
             }
 
-            handleUserQuery(userQuery,"","")
+            handleUserQuery(userQuery, "", "")
         }
     }
 
@@ -831,8 +831,8 @@ window.updateTypeMessageBox = () => {
                     childImg.style.height = "200px"
                 }
                 let userQueryHTML = messageBox.innerHTML.trim("")
-                if(userQueryHTML.startsWith('<img')){
-                    userQueryHTML="<br/>"+userQueryHTML
+                if (userQueryHTML.startsWith('<img')) {
+                    userQueryHTML = "<br/>" + userQueryHTML
                 }
                 if (userQuery !== '') {
                     handleUserQuery(userQuery.trim(''), userQueryHTML, imgUrl)
@@ -841,14 +841,14 @@ window.updateTypeMessageBox = () => {
                 }
             }
         })
-        document.getElementById('uploadImgIcon').addEventListener('click', function() {
+        document.getElementById('uploadImgIcon').addEventListener('click', function () {
             imgUrl = "https://samples-files.com/samples/Images/jpg/1920-1080-sample.jpg"
             const userMessage = document.getElementById("userMessageBox");
             const childImg = userMessage.querySelector("#picInput");
             if (childImg) {
                 userMessage.removeChild(childImg)
             }
-            userMessage.innerHTML+='<br/><img id="picInput" src="https://samples-files.com/samples/Images/jpg/1920-1080-sample.jpg" style="width:100px;height:100px"/><br/><br/>'   
+            userMessage.innerHTML += '<br/><img id="picInput" src="https://samples-files.com/samples/Images/jpg/1920-1080-sample.jpg" style="width:100px;height:100px"/><br/><br/>'
         });
     } else {
         document.getElementById('userMessageBox').hidden = true
@@ -874,104 +874,104 @@ window.updatePrivateEndpoint = () => {
 }
 
 // Existing code...  
-  
+
 // Function to update the cart display  
-function updateCartDisplay() {  
-    var cartItemsElement = document.getElementById('cartItems');  
+function updateCartDisplay() {
+    var cartItemsElement = document.getElementById('cartItems');
     cartItemsElement.innerHTML = ''; // Clear previous items  
-    finalCart.forEach(function(item, index) {  
-        var li = document.createElement('li');  
-        li.className = 'cart-item';  
-          
-        var img = document.createElement('img');  
+    finalCart.forEach(function (item, index) {
+        var li = document.createElement('li');
+        li.className = 'cart-item';
+
+        var img = document.createElement('img');
         img.src = getImageUrl(item.name); // Function to get image URL based on item name  
-          
-        var itemName = document.createElement('span');  
-        itemName.textContent = `${item.name} - $${(item.price * item.quantity).toFixed(2)}`;  
+
+        var itemName = document.createElement('span');
+        itemName.textContent = `${item.name} - $${(item.price * item.quantity).toFixed(2)}`;
         itemName.style.padding = '10px'; // Add padding of 10px
         itemName.style.fontSize = '15px';
-          
-        var quantityInput = document.createElement('input');  
-        quantityInput.type = 'number';  
-        quantityInput.value = item.quantity;  
-        quantityInput.min = 1;  
-        quantityInput.max = 999;  
-        quantityInput.onchange = function() {  
-            updateItemQuantity(index, quantityInput.value);  
-        };  
-          
-        var removeButton = document.createElement('button');  
+
+        var quantityInput = document.createElement('input');
+        quantityInput.type = 'number';
+        quantityInput.value = item.quantity;
+        quantityInput.min = 1;
+        quantityInput.max = 999;
+        quantityInput.onchange = function () {
+            updateItemQuantity(index, quantityInput.value);
+        };
+
+        var removeButton = document.createElement('button');
 
         removeButton.className = 'removeButton';
-        removeButton.textContent = 'X';  
-        removeButton.onclick = function() {  
-            removeItemFromCart(index);  
-        };  
-          
-        li.appendChild(img);  
-        li.appendChild(itemName);  
-        li.appendChild(quantityInput);  
-        li.appendChild(removeButton);  
-        cartItemsElement.appendChild(li);  
-    });  
-}  
-  
+        removeButton.textContent = 'X';
+        removeButton.onclick = function () {
+            removeItemFromCart(index);
+        };
+
+        li.appendChild(img);
+        li.appendChild(itemName);
+        li.appendChild(quantityInput);
+        li.appendChild(removeButton);
+        cartItemsElement.appendChild(li);
+    });
+}
+
 // Function to get image URL based on item name  
-function getImageUrl(itemName) {  
-    switch (itemName.toLowerCase()) {  
-        case 'big mac':  
-            return './image/big_mac.png';  
-        case 'cheeseburger':  
-            return './image/cheeseburger.png';  
-        case 'coca-cola':  
-            return './image/coke.png';  
-        case 'milo':  
-            return './image/milo.png';  
-        default:  
-            return './image/default.png';  
-    }  
-}  
-  
+function getImageUrl(itemName) {
+    switch (itemName.toLowerCase()) {
+        case 'big mac':
+            return './image/big_mac.png';
+        case 'cheeseburger':
+            return './image/cheeseburger.png';
+        case 'coca-cola':
+            return './image/coke.png';
+        case 'milo':
+            return './image/milo.png';
+        default:
+            return './image/default.png';
+    }
+}
+
 // Function to update item quantity in the cart  
-function updateItemQuantity(index, quantity) {  
-    finalCart[index].quantity = parseInt(quantity);  
-    updateCartDisplay();  
-}  
-  
+function updateItemQuantity(index, quantity) {
+    finalCart[index].quantity = parseInt(quantity);
+    updateCartDisplay();
+}
+
 // Function to remove item from the cart  
-function removeItemFromCart(index) {  
-    finalCart.splice(index, 1);  
-    updateCartDisplay();  
-}  
-  
+function removeItemFromCart(index) {
+    finalCart.splice(index, 1);
+    updateCartDisplay();
+}
+
 // Function to handle checkout  
-function checkout() {  
+function checkout() {
     // Implement checkout functionality here  
-    alert('Proceeding to checkout with items: ' + JSON.stringify(finalCart));  
-}   
+    alert('Proceeding to checkout with items: ' + JSON.stringify(finalCart));
+}
 var pfx = ["webkit", "moz", "MS", "o", ""],
     clicked = false,
     layers = [
-      document.querySelector('.layer-1'),
-      document.querySelector('.layer-2'),
-      document.querySelector('.layer-3'),
-      document.querySelector('.layer-4'),
+        document.querySelector('.layer-1'),
+        document.querySelector('.layer-2'),
+        document.querySelector('.layer-3'),
+        document.querySelector('.layer-4'),
     ],
     count = 0;
-    
+
 
 function PrefixedEvent(element, type, callback) {
     for (var p = 0; p < pfx.length; p++) {
         if (!pfx[p]) type = type.toLowerCase();
-        element.addEventListener(pfx[p]+type, callback, false);
+        element.addEventListener(pfx[p] + type, callback, false);
     }
 }
 function handleClick() {
-  for (var i = 0; i < layers.length; i++) {
-    PrefixedEvent(layers[i], "AnimationIteration", AnimationListener);
-  }
-  document.querySelector('.finish-loading').classList.add('disableButton');
-} 
+    for (var i = 0; i < layers.length; i++) {
+        PrefixedEvent(layers[i], "AnimationIteration", AnimationListener);
+    }
+    document.querySelector('.finish-loading').classList.add('disableButton');
+}
 
 function startSession() {
     document.getElementById('chatHistory').style.visibility = 'visible';
@@ -982,19 +982,25 @@ function startSession() {
     document.getElementById('chatHistoryHeader').removeAttribute('hidden');
     document.getElementById('chatHistoryContent').removeAttribute('hidden');
 }
-   
+
 
 function showHelpPopup() {
-    document.getElementById('helpPopup').classList.remove('hidden');
-    document.getElementById('helpPopup').style.visibility = 'visible';
+    document.getElementById('popup-content').style.visibility = 'visible';
 }
 
 function hideHelpPopup() {
-    document.getElementById('helpPopup').style.visibility = 'hidden'; }
-
-window.onclick = function(event) {
-    const helpPopup = document.getElementById('helpPopup');
-    if (!helpPopup.contains(event.target) && !event.target.matches('#closePopup')) {
-        hideHelpPopup();
-    }
+    document.getElementById('popup-content').style.visibility = 'hidden';
 }
+
+// Function to show the help modal
+function showHelpModal() {
+    document.getElementById('helpModal').style.display = 'block';
+}
+
+// Function to hide the help modal
+function hideHelpModal() {
+    document.getElementById('helpModal').style.display = 'none';
+}
+
+// Example usage for showing the modal (you can modify this as needed)
+document.getElementById('stopSession').onclick = showHelpModal;
