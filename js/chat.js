@@ -312,10 +312,10 @@ function extractQuantity(text) {
         }
     }
     return quantity;
-}
-function addToCartFromMenu(itemName, itemPrice) {
-    // Prompt user for quantity
-    let quantity = parseInt(prompt(`Enter quantity for ${itemName}:`), 10);
+}function addToCartFromMenu(itemName, itemPrice, quantityInputId) {
+    // Get the quantity from the input box
+    let quantityInput = document.getElementById(quantityInputId);
+    let quantity = parseInt(quantityInput.value, 10);
     
     // Check if quantity is valid
     if (isNaN(quantity) || quantity <= 0) {
@@ -325,7 +325,11 @@ function addToCartFromMenu(itemName, itemPrice) {
     
     // Add item to cart
     addToCart(itemName, itemPrice, `Quantity: ${quantity}`);
+    
+    // Clear the input box after adding to cart
+    quantityInput.value = '';
 }
+
 
 // Function to add items to cart
 function addToCart(itemName, itemPrice, lowerText) {
@@ -892,10 +896,10 @@ window.updatePrivateEndpoint = () => {
 
 // Existing code...  
 
-// Function to update the cart display  
 function updateCartDisplay() {
     var cartItemsElement = document.getElementById('cartItems');
     cartItemsElement.innerHTML = ''; // Clear previous items  
+
     finalCart.forEach(function (item, index) {
         var li = document.createElement('li');
         li.className = 'cart-item';
@@ -903,10 +907,16 @@ function updateCartDisplay() {
         var img = document.createElement('img');
         img.src = getImageUrl(item.name); // Function to get image URL based on item name  
 
+        var content = document.createElement('div');
+        content.className = 'cart-item-content';
+
         var itemName = document.createElement('span');
-        itemName.textContent = `${item.name} - $${(item.price * item.quantity).toFixed(2)}`;
-        itemName.style.padding = '10px'; // Add padding of 10px
-        itemName.style.fontSize = '15px';
+        itemName.className = 'item-name';
+        itemName.textContent = item.name;
+
+        var itemPrice = document.createElement('span');
+        itemPrice.className = 'item-price';
+        itemPrice.textContent = `$${(item.price * item.quantity).toFixed(2)}`;
 
         var quantityInput = document.createElement('input');
         quantityInput.type = 'number';
@@ -917,22 +927,47 @@ function updateCartDisplay() {
             updateItemQuantity(index, quantityInput.value);
         };
 
-        var removeButton = document.createElement('button');
+        var removeQuantityInput = document.createElement('input');
+        removeQuantityInput.type = 'number';
+        removeQuantityInput.value = 1;
+        removeQuantityInput.min = 1;
+        removeQuantityInput.max = item.quantity;
+        removeQuantityInput.className = 'remove-quantity-input';
 
+        var removeButton = document.createElement('button');
         removeButton.className = 'removeButton';
         removeButton.textContent = 'X';
         removeButton.onclick = function () {
-            removeItemFromCart(index);
+            var removeQuantity = parseInt(removeQuantityInput.value, 10);
+            if (isNaN(removeQuantity) || removeQuantity <= 0 || removeQuantity > item.quantity) {
+                alert('Please enter a valid quantity to remove.');
+                return;
+            }
+            removeItemFromCart(index, removeQuantity);
         };
 
+        content.appendChild(itemName);
+        content.appendChild(itemPrice);
         li.appendChild(img);
-        li.appendChild(itemName);
+        li.appendChild(content);
         li.appendChild(quantityInput);
+        li.appendChild(removeQuantityInput);
         li.appendChild(removeButton);
+
         cartItemsElement.appendChild(li);
     });
 }
 
+// Function to remove a quantity of an item from the cart
+function removeItemFromCart(index, removeQuantity) {
+    var item = finalCart[index];
+    if (removeQuantity >= item.quantity) {
+        finalCart.splice(index, 1);
+    } else {
+        item.quantity -= removeQuantity;
+    }
+    updateCartDisplay();
+}
 // Function to get image URL based on item name  
 function getImageUrl(itemName) {
     switch (itemName.toLowerCase()) {
@@ -956,13 +991,7 @@ function updateItemQuantity(index, quantity) {
     finalCart[index].quantity = parseInt(quantity);
     updateCartDisplay();
 }
-
-// Function to remove item from the cart  
-function removeItemFromCart(index) {
-    finalCart.splice(index, 1);
-    updateCartDisplay();
-}
-
+ 
 // Function to handle checkout  
 function checkout() {
     // Implement checkout functionality here  

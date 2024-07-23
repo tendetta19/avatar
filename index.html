@@ -137,7 +137,7 @@
    </div>
 
    <div class="flex-container">
-      <div id="videoContainer" style="position: relative; width: 900px;">
+      <div id="videoContainer" style="position: relative; width: 800px;">
          <div id="overlayArea" style="position: absolute;">
             <div id="localVideo" hidden>
                <video src="video/lisa-casual-sitting-idle.mp4" autoplay loop muted></video>
@@ -150,42 +150,52 @@
                <div id="chatHistoryContent" hidden></div>
             </div>
          </div>
-      </div>
-      <div id="menu" hidden>
+      </div><div id="menu" hidden>
          <h2>Menu</h2>
-         <div class="menu-item" onclick="addToCartFromMenu('Cheeseburger', 5.99)">
+         <div class="menu-item">
             <img src="./image/cheeseburger.png" alt="Cheeseburger">
-            <div>
-               <h3>Cheeseburger <br>Available <br>$5.99</h3>
+            <div class="item-details">
+               <h3>Cheeseburger <br><span class="price">$5.99</span></h3>
+               <input type="number" id="quantity-cheeseburger" class="quantity-input" placeholder="Qty" min="1" style="width: 60px;">
+               <button onclick="addToCartFromMenu('Cheeseburger', 5.99, 'quantity-cheeseburger')">Add to Cart</button>
             </div>
          </div>
-         <div class="menu-item" onclick="addToCartFromMenu('Milo', 2.49)">
+         <div class="menu-item">
             <img src="./image/milo.png" alt="Milo">
-            <div>
-               <h3>Milo <br>Available <br>$2.49</h3>
+            <div class="item-details">
+               <h3>Milo <br><span class="price">$2.49</span></h3>
+               <input type="number" id="quantity-milo" class="quantity-input" placeholder="Qty" min="1" style="width: 60px;">
+               <button onclick="addToCartFromMenu('Milo', 2.49, 'quantity-milo')">Add to Cart</button>
             </div>
          </div>
-         <div class="menu-item" onclick="addToCartFromMenu('Big Mac', 6.99)">
+         <div class="menu-item">
             <img src="./image/big_mac.png" alt="Big Mac">
-            <div>
-               <h3>Big Mac <br>Available <br>$6.99</h3>
+            <div class="item-details">
+               <h3>Big Mac <br><span class="price">$6.99</span></h3>
+               <input type="number" id="quantity-big-mac" class="quantity-input" placeholder="Qty" min="1" style="width: 60px;">
+               <button onclick="addToCartFromMenu('Big Mac', 6.99, 'quantity-big-mac')">Add to Cart</button>
             </div>
          </div>
-         <div class="menu-item" onclick="addToCartFromMenu('Coca-Cola', 7.99)">
+         <div class="menu-item">
             <img src="./image/coke.png" alt="Coca-Cola">
-            <div>
-               <h3>Coca-Cola <br>Available <br>$7.99</h3>
+            <div class="item-details">
+               <h3>Coca-Cola <br><span class="price">$7.99</span></h3>
+               <input type="number" id="quantity-coca-cola" class="quantity-input" placeholder="Qty" min="1" style="width: 60px;">
+               <button onclick="addToCartFromMenu('Coca-Cola', 7.99, 'quantity-coca-cola')">Add to Cart</button>
             </div>
          </div>
-         <div class="menu-item" onclick="addToCartFromMenu('Wagyu Steak', 69.99)">
+         <div class="menu-item">
             <img src="./image/wagyu.png" alt="Wagyu Steak">
-            <div>
-               <h3>Wagyu Steak<br>Out of Stock <br>$69.99</h3>
+            <div class="item-details">
+               <h3>Wagyu Steak<br><span class="price">Out of Stock $69.99</span></h3>
+               <input type="number" id="quantity-wagyu-steak" class="quantity-input" placeholder="Qty" min="1" style="width: 60px;" disabled>
+               <button disabled>Add to Cart</button>
             </div>
          </div>
       </div>
+      
 
-      <div id="cartDisplay" hidden>
+      <div id="cartDisplay"  hidden>
          <h2 class="header">Your Cart</h2>
          <ul id="cartItems"></ul>
          <button id="clearCartButton" class="bottom-left" onclick="emptyCart()">Empty Cart</button>
