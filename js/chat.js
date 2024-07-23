@@ -181,9 +181,12 @@ function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential) {
                 document.getElementById('chatHistory').removeAttribute('hidden');
                 document.getElementById('chatHistoryHeader').removeAttribute('hidden');
                 document.getElementById('chatHistoryContent').removeAttribute('hidden');
+                document.getElementById('menu').style.visibility = 'visible';
+                document.getElementById('menu').removeAttribute('hidden');
                 document.getElementById('chatHistoryHeader').style.visibility = 'visible';
                 document.getElementById('chatHistoryContent').style.visibility = 'visible';
                 document.getElementById('cartDisplay').hidden = false
+                document.getElementById('menu').hidden = false
                 document.getElementById('showTypeMessage').disabled = false
 
 
@@ -310,6 +313,19 @@ function extractQuantity(text) {
     }
     return quantity;
 }
+function addToCartFromMenu(itemName, itemPrice) {
+    // Prompt user for quantity
+    let quantity = parseInt(prompt(`Enter quantity for ${itemName}:`), 10);
+    
+    // Check if quantity is valid
+    if (isNaN(quantity) || quantity <= 0) {
+        alert('Please enter a valid quantity.');
+        return;
+    }
+    
+    // Add item to cart
+    addToCart(itemName, itemPrice, `Quantity: ${quantity}`);
+}
 
 // Function to add items to cart
 function addToCart(itemName, itemPrice, lowerText) {
@@ -390,7 +406,7 @@ function speakNext(text, endingSilenceMs = 0) {
                     }
 
                     if (lowerText.includes('coca-cola')) {
-                        addToCart('Coca-cola', 1.99, lowerText);
+                        addToCart('Coca-cola', 7.99, lowerText);
                     }
 
                     if (lowerText.includes('milo')) {
@@ -739,6 +755,7 @@ window.stopSession = () => {
     document.getElementById('chatHistoryHeader').hidden = true
     document.getElementById('chatHistoryContent').hidden = true
     document.getElementById('cartDisplay').hidden = true
+    document.getElementById('menu').hidden = true
     document.getElementById('showTypeMessage').checked = false
     document.getElementById('showTypeMessage').disabled = true
     document.getElementById('userMessageBox').hidden = true
@@ -927,6 +944,8 @@ function getImageUrl(itemName) {
             return './image/coke.png';
         case 'milo':
             return './image/milo.png';
+        case 'wagyu':
+                return './image/wagyu.png';
         default:
             return './image/default.png';
     }

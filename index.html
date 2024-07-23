@@ -151,15 +151,46 @@
             </div>
          </div>
       </div>
+      <div id="menu" hidden>
+         <h2>Menu</h2>
+         <div class="menu-item" onclick="addToCartFromMenu('Cheeseburger', 5.99)">
+            <img src="./image/cheeseburger.png" alt="Cheeseburger">
+            <div>
+               <h3>Cheeseburger <br>Available <br>$5.99</h3>
+            </div>
+         </div>
+         <div class="menu-item" onclick="addToCartFromMenu('Milo', 2.49)">
+            <img src="./image/milo.png" alt="Milo">
+            <div>
+               <h3>Milo <br>Available <br>$2.49</h3>
+            </div>
+         </div>
+         <div class="menu-item" onclick="addToCartFromMenu('Big Mac', 6.99)">
+            <img src="./image/big_mac.png" alt="Big Mac">
+            <div>
+               <h3>Big Mac <br>Available <br>$6.99</h3>
+            </div>
+         </div>
+         <div class="menu-item" onclick="addToCartFromMenu('Coca-Cola', 7.99)">
+            <img src="./image/coke.png" alt="Coca-Cola">
+            <div>
+               <h3>Coca-Cola <br>Available <br>$7.99</h3>
+            </div>
+         </div>
+         <div class="menu-item" onclick="addToCartFromMenu('Wagyu Steak', 69.99)">
+            <img src="./image/wagyu.png" alt="Wagyu Steak">
+            <div>
+               <h3>Wagyu Steak<br>Out of Stock <br>$69.99</h3>
+            </div>
+         </div>
+      </div>
+
       <div id="cartDisplay" hidden>
          <h2 class="header">Your Cart</h2>
          <ul id="cartItems"></ul>
-
+         <button id="clearCartButton" class="bottom-left" onclick="emptyCart()">Empty Cart</button>
          <button id="checkoutButton" class="bottom-right" onclick="checkout()">Checkout</button>
-
       </div>
-   </div>
-
 
    </div>
    <div margin-top="5px">
