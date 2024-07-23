@@ -983,3 +983,18 @@ function startSession() {
     document.getElementById('chatHistoryContent').removeAttribute('hidden');
 }
    
+
+function showHelpPopup() {
+    document.getElementById('helpPopup').classList.remove('hidden');
+    document.getElementById('helpPopup').style.visibility = 'visible';
+}
+
+function hideHelpPopup() {
+    document.getElementById('helpPopup').style.visibility = 'hidden'; }
+
+window.onclick = function(event) {
+    const helpPopup = document.getElementById('helpPopup');
+    if (!helpPopup.contains(event.target) && !event.target.matches('#closePopup')) {
+        hideHelpPopup();
+    }
+}

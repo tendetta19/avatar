@@ -112,7 +112,7 @@
          <span></span>
          Clear Chat
          </a>
-         <a href="#" id="stopSession" onclick="window.stopSession()" disabled>
+         <a href="#" id="stopSession" onclick="window.showHelpPopup()">
          <span></span>
          <span></span>
          <span></span>
@@ -158,6 +158,14 @@
       <div>
          <img id="uploadImgIcon" src="./image/attachment.jpg" alt="Button" style="cursor: pointer;" hidden />
       </div>
- 
+       <!-- Help Popup -->
+       <div id="helpPopup" class="hidden">
+         <div class="popup-content">
+            <h2>How to Use the Program</h2>
+            <p>Instructions on how to use the program go here.</p>
+            <button class="close-button" onclick="hideHelpPopup()">Close</button>
+         </div>
+      </div>
+
    </body>
 </html>
