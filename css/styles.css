@@ -38,9 +38,12 @@ body {
     font-weight: 300;
     margin: 0;
     padding: 1em;
-    word-break: break-word;
+    word-break: break-word; 
 }
 
+/* 
+body {   
+  } */
 button {
     background-color: #d84a38;
     border: none;
@@ -1073,6 +1076,85 @@ a span:nth-child(4){
     @keyframes fadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
+    }.instructions-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        z-index: 1000;
+    }
+    
+    .instructions-popup {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        background-color: white;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        padding: 20px;
+        width: 300px;
+        z-index: 1000;
+    }
+    
+    .hidden {
+        display: none;
+    }
+    
+    .close-button {
+        background-color: #d84a38;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+    
+    .close-button:hover {
+        background-color: #cf402f;
+    }
+    
+    /* Include existing styles from the provided CSS */
+    #chatHistory {
+        position: absolute;
+        top: 0px; /* Adjust as needed */ 
+        width: 300px;
+        height: 427.5px;
+        font-size: medium;
+        border: none;
+        resize: none; 
+        background-color: white;
+        justify-content: left;
+        overflow: hidden;
+        z-index: 2; 
+        border-color: #000000;
+        border-style: solid;/* Ensure it overlays the video */
+        display: flex;
+        flex-direction: column;  
+    }
+    
+    #chatHistoryHeader {
+        background-color: #f1f1f1;
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+        border-color: #000000;
+        border-style: solid;
+        border-bottom: 1px solid #ccc;
+        border-radius: 10px 10px 0 0;
     }
 
- 
+    #chatHistoryContent {
+        padding: 10px;
+        flex-grow: 1;
+        overflow-y: auto;border-color: #000000;
+        border-style: solid;
+    }

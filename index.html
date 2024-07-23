@@ -8,6 +8,8 @@
       <script src="./js/chat.js"></script>
    </head>
    <body style="background-size: cover; background-image: url('./image/background.jpg');">
+      
+      
       <div id="configuration" hidden>
          <h2 style="background-color: white; width: 300px;">Azure Speech Resource</h2>
          <label style="font-size: medium;" for="region">Region:</label>
@@ -118,61 +120,32 @@
          <span></span>
          Close Session
          </a>
-         <!--    <input class="checkbox-booking" type="checkbox" name="booking" id="booking-1">
-            <label class="for-checkbox-booking" for="booking-1"  id="startSession" onclick="window.startSession()">
-              <i class='uil uil-coffee mr-3'></i><span class="text">Open Session</span>
-            </label> 
-            <input class="checkbox-booking" type="checkbox" name="booking" id="booking-2">
-            <label class="for-checkbox-booking" for="booking-2" id="microphone" onclick="window.microphone()">              
-              <i class='uil uil-restaurant mr-3'></i><span class="text">Start Microphone</span>
-            </label>
-            <input class="checkbox-booking" type="checkbox" name="booking" id="booking-3" >
-            <label class="for-checkbox-booking" for="booking-3" id="stopSpeaking" onclick="stopSpeaking()" disabled>              
-              <i class='uil uil-car-sideview mr-3'></i><span class="text">Stop Speaking</span>
-            </label>
-            <input class="checkbox-booking" type="checkbox" name="booking" id="booking-4" onclick="window.clearChatHistory()">
-            <label class="for-checkbox-booking" for="booking-4" id="clearChatHistory" onclick="window.clearChatHistory()">              
-              <i class='uil uil-flower mr-3'></i><span class="text">Clear Chat</span>
-            </label>
-            <input class="checkbox-booking" type="checkbox" name="booking" id="booking-5"onclick="window.stopSession()" disabled>
-            <label class="for-checkbox-booking" for="booking-5"id="stopSession" onclick="window.stopSession()" disabled>              
-              <i class='uil uil-wifi mr-3'></i><span class="text">Close Session</span>
-            </label>   -->
+ 
       </div>
-      <!-- <button id="startSession" onclick="window.startSession()">Open Avatar Session</button>
-         <button id="microphone" onclick="window.microphone()" disabled>Start Microphone</button>
-         <button id="stopSpeaking" onclick="stopSpeaking()" disabled>Stop Speaking</button>
-         <button id="clearChatHistory" onclick="window.clearChatHistory()">Clear Chat History</button>
-         <button id="stopSession" onclick="window.stopSession()" disabled>Close Avatar Session</button>
-          -->
+ 
       <div class="flex-container">
          <div id="videoContainer" style="position: relative; width: 900px;">
-            <div id="overlayArea" style="position: absolute;">
-               <div id="localVideo" hidden>
-                  <video src="video/lisa-casual-sitting-idle.mp4" autoplay loop muted></video>
-               </div>
-               <div id="remoteVideo" style="width: 100%; display: inline-block;"></div>
-            </div>
+             <div id="overlayArea" style="position: absolute;">
+                 <div id="localVideo" hidden>
+                     <video src="video/lisa-casual-sitting-idle.mp4" autoplay loop muted></video>
+                 </div>
+                 <div id="remoteVideo" style="width: 100%; display: inline-block;"></div>
+                 <div id="chatHistory" style="font-size: medium; border: none; resize: none; border-radius: 10px; background-color: white; justify-content: left; visibility: hidden;" contentEditable="false" hidden>
+                  <div id="chatHistoryHeader" hidden>Chat History</div>
+                  <div id="chatHistoryContent" hidden></div>
+              </div>
+             </div>
          </div>
-         <div id="chatHistory" style="
-            width: 300px;
-            height: 427px;
-            font-size: medium;
-            border: none;
-            resize: none;
-    border-radius: 10px;
-            background-color: white;
-            justify: left;
-            overflow: hidden;" contentEditable="false" hidden> 
- 
-			</div>
-<div id="cartDisplay" hidden>  
-        <h2 class="header">Your Cart</h2>  
-        <ul id="cartItems"></ul>  
+         <div id="cartDisplay" hidden>  
+            <h2 class="header">Your Cart</h2>  
+            <ul id="cartItems"></ul>  
+    
+            <button id="checkoutButton" class="bottom-right" onclick="checkout()">Checkout</button>
+     
+        </div>  
+     </div>
+     
 
-        <button id="checkoutButton" class="bottom-right" onclick="checkout()">Checkout</button>
- 
-    </div>  
       </div>
       <div margin-top="5px">
          <div id="showTypeMessageCheckbox">
@@ -185,5 +158,6 @@
       <div>
          <img id="uploadImgIcon" src="./image/attachment.jpg" alt="Button" style="cursor: pointer;" hidden />
       </div>
+ 
    </body>
 </html>

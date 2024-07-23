@@ -173,7 +173,16 @@ function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential) {
                 document.getElementById('microphone').disabled = false
                 document.getElementById('stopSession').disabled = false
                 document.getElementById('remoteVideo').style.width = '900px' 
-                document.getElementById('chatHistory').hidden = false
+                document.getElementById('chatHistory').style.visibility = 'visible';
+                document.getElementById('chatHistoryHeader').style.visibility = 'visible';
+                document.getElementById('chatHistoryContent').style.visibility = 'visible';
+            
+                // Remove the 'hidden' attribute if it's set
+                document.getElementById('chatHistory').removeAttribute('hidden');
+                document.getElementById('chatHistoryHeader').removeAttribute('hidden');
+                document.getElementById('chatHistoryContent').removeAttribute('hidden');
+                document.getElementById('chatHistoryHeader').style.visibility = 'visible';
+                document.getElementById('chatHistoryContent').style.visibility = 'visible';
                 document.getElementById('cartDisplay').hidden = false
                 document.getElementById('showTypeMessage').disabled = false
  
@@ -227,7 +236,7 @@ function initMessages() {
     messages = []
 
     if (dataSources.length === 0) {
-        let systemPrompt = "You are a MacDonald manager to take orders from customers. You can do 2 functions. Take orders from customers and cancel orders for customers. If the customer wants to take orders, you can only take orders for [big mac, cheeseburger, milo and coca-cola]. If the customer wants to remove items, you can also remove items from the cart that the user has oredered or remove specific items from the cart if the user tells you to do so. E.g The customer says I would like 1 Cheeseburger removed or remove cheeseburger. Tell him that 1 cheeseburger has been removed from the cart, depending on the quantity in numbers. After the customer has said something, just ask him if he would like anything else, no need to repeat the menu again. Example: Customer: I would like 1 big mac. Response: 1 big mac, anything else? If what the customer says is not part of the items that you are trained on, ask them for their order again unless they are telling to clear their cart or remove an item for their cart. You do not have to give them  the items that you take orders for. If the customer says he has nothing else to order, say 'Please proceed with checkout'. If the user says Clear Cart or anything along the lines or clearing cart, repeat back 'Cart has been cleared' Nothing else is to be included in the message";
+        let systemPrompt = "You are a MacDonald manager to take orders from customers. You can do 2 functions. Take orders from customers and cancel orders for customers. If the customer wants to take orders, you can only take orders for [big mac, cheeseburger, milo and coca-cola]. If the customer wants to remove items, you can also remove items from the cart that the user has oredered or remove specific items from the cart if the user tells you to do so. E.g The customer says I would like 1 Cheeseburger removed or remove cheeseburger. Tell him that 1 cheeseburger has been removed from the cart, depending on the quantity in numbers. After the customer has said something, just ask him if he would like anything else, no need to repeat the menu again. Example: Customer: I would like 1 big mac. Response: 1 big mac, anything else? If what the customer says is not part of the items that you are trained on, tell them that You could not pick up their owner and tell them to please repeat their order unless they are telling to clear their cart or remove an item for their cart. You do not have to give them  the items that you take orders for. If the customer says he has nothing else to order, say 'Please proceed with checkout'. If the user says Clear Cart or anything along the lines or clearing cart, repeat back 'Cart has been cleared' Nothing else is to be included in the message";
         let systemMessage = {
             role: 'system',
             content: systemPrompt
@@ -449,7 +458,7 @@ function stopSpeaking() {
 
 // Function to add a message
 function addMessage(speaker, text, imgUrlPath = '') {
-    let chatHistoryTextArea = document.getElementById('chatHistory'); 
+    let chatHistoryTextArea = document.getElementById('chatHistoryContent'); 
     let messageDiv = document.createElement('div');
     messageDiv.className = `message ${speaker}`;
     
@@ -489,7 +498,7 @@ function handleUserQuery(userQuery, userQueryHTML, imgUrlPath) {
     }
 
     messages.push(chatMessage)
-    let chatHistoryTextArea = document.getElementById('chatHistory')
+    let chatHistoryTextArea = document.getElementById('chatHistoryContent')
     if (chatHistoryTextArea.innerHTML !== '' && !chatHistoryTextArea.innerHTML.endsWith('\n\n')) {
         chatHistoryTextArea.innerHTML += '\n\n'
     }
@@ -546,7 +555,7 @@ function handleUserQuery(userQuery, userQueryHTML, imgUrlPath) {
             throw new Error(`Chat API response status: ${response.status} ${response.statusText}`)
         }
 
-        let chatHistoryTextArea = document.getElementById('chatHistory')
+        let chatHistoryTextArea = document.getElementById('chatHistoryContent')
 		
         //chatHistoryTextArea.innerHTML += imgUrlPath.trim() ? 'MacDonald: ':'<br/>MacDonald: '
 
@@ -726,7 +735,9 @@ window.stopSession = () => {
     document.getElementById('startSession').disabled = false
     document.getElementById('microphone').disabled = true
     document.getElementById('stopSession').disabled = true 
-    document.getElementById('chatHistory').hidden = true
+    document.getElementById('chatHistory').hidden = true 
+    document.getElementById('chatHistoryHeader').hidden = true
+    document.getElementById('chatHistoryContent').hidden = true
     document.getElementById('cartDisplay').hidden = true
     document.getElementById('showTypeMessage').checked = false
     document.getElementById('showTypeMessage').disabled = true
@@ -741,7 +752,7 @@ window.stopSession = () => {
 }
 
 window.clearChatHistory = () => {
-    document.getElementById('chatHistory').innerHTML = ''
+    document.getElementById('chatHistoryContent').innerHTML = ''
     initMessages()
 }
 
@@ -937,5 +948,27 @@ function removeItemFromCart(index) {
 function checkout() {  
     // Implement checkout functionality here  
     alert('Proceeding to checkout with items: ' + JSON.stringify(finalCart));  
-}  
-   
+}   
+var pfx = ["webkit", "moz", "MS", "o", ""],
+    clicked = false,
+    layers = [
+      document.querySelector('.layer-1'),
+      document.querySelector('.layer-2'),
+      document.querySelector('.layer-3'),
+      document.querySelector('.layer-4'),
+    ],
+    count = 0;
+    
+
+function PrefixedEvent(element, type, callback) {
+    for (var p = 0; p < pfx.length; p++) {
+        if (!pfx[p]) type = type.toLowerCase();
+        element.addEventListener(pfx[p]+type, callback, false);
+    }
+}
+function handleClick() {
+  for (var i = 0; i < layers.length; i++) {
+    PrefixedEvent(layers[i], "AnimationIteration", AnimationListener);
+  }
+  document.querySelector('.finish-loading').classList.add('disableButton');
+} 
