@@ -982,4 +982,4 @@ function startSession() {
     document.getElementById('chatHistoryHeader').removeAttribute('hidden');
     document.getElementById('chatHistoryContent').removeAttribute('hidden');
 }
- 
+   
