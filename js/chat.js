@@ -947,7 +947,7 @@ function getImageUrl(itemName) {
         case 'wagyu':
                 return './image/wagyu.png';
         default:
-            return './image/default.png';
+            return './image/wagyu.png';
     }
 }
 
