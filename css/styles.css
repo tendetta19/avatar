@@ -1361,9 +1361,7 @@ a span:nth-child(4) {
   /* Center modal */
   padding: 20px;
   border: 1px solid #888;
-  width: 80%;
-  /* Adjust as needed */
-  max-width: 600px;
+  max-width: 50%;
   /* Optional: limit the width */
   height: auto;
   /* Adjust as needed */
@@ -1373,7 +1371,8 @@ a span:nth-child(4) {
 
 /* Image Styling */
 .modal-content img {
-  max-width: 100%;
+  scale:100%;
+
   /* Make sure the image doesn't overflow */
   height: auto;
   /* Maintain aspect ratio */
@@ -1381,10 +1380,11 @@ a span:nth-child(4) {
 
 /* Close Button */
 .close {
-  color: #aaa;
+  color: red;
   float: right;
-  font-size: 28px;
+  font-size: 50px;
   font-weight: bold;
+  z-index: 2;
 }
 
 .close:hover,
