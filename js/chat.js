@@ -33,7 +33,7 @@ async function fetchInitialMessage() {
             },
             {
                 role: 'user',
-                content: "Greet the customer and ask how you can help them."
+                content: "Greet the customer Justin and ask how you can help them."
             }
         ]
     });
