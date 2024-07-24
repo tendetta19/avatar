@@ -128,6 +128,7 @@ html {
 
 img {
   border: none; 
+  max-width: 100%;
 }
 
 input[type=radio] {
@@ -1387,11 +1388,10 @@ a span:nth-child(4) {
   align-items: center;
   border-radius: 25px;
   justify-content: center;
-  background-color: #fefefe;
+  background-color: transparent;
   margin: 5% auto;
   /* Center modal */
-  padding: 20px;
-  border: 1px solid #888;
+  padding: 20px; 
   max-width: 50%;
   /* Optional: limit the width */
   height: auto;
@@ -1402,8 +1402,7 @@ a span:nth-child(4) {
 
 /* Image Styling */
 .modal-content img {
-  scale:100%;
-
+  scale:100%; 
   /* Make sure the image doesn't overflow */
   height: auto;
   /* Maintain aspect ratio */
