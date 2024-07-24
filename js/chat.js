@@ -19,11 +19,51 @@ var lastSpeakTime
 var imgUrl = ""
 var finalCart = []
 
+async function fetchInitialMessage() {
+    const azureOpenAIEndpoint = "https://justin-openai-demo.openai.azure.com/";
+    const azureOpenAIApiKey = "1a1f8c2855a44483bbd3ef4c838996c8";
+    const azureOpenAIDeploymentName = "justin-gpt-4o";
+
+    let url = `${azureOpenAIEndpoint}/openai/deployments/${azureOpenAIDeploymentName}/chat/completions?api-version=2023-06-01-preview`;
+    let body = JSON.stringify({
+        messages: [
+            {
+                role: 'system',
+                content: "You are a MacDonald manager to take orders from customers. You can only take orders for [big mac, cheeseburger, milo and coke]."
+            },
+            {
+                role: 'user',
+                content: "Greet the customer and ask how you can help them."
+            }
+        ]
+    });
+
+    try {
+        let response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'api-key': azureOpenAIApiKey,
+                'Content-Type': 'application/json'
+            },
+            body: body
+        });
+
+        if (!response.ok) {
+            throw new Error(`Chat API response status: ${response.status} ${response.statusText}`);
+        }
+
+        let responseData = await response.json();
+        return responseData.choices[0].message.content;
+    } catch (error) {
+        console.error("Error fetching initial message:", error);
+        return "Welcome! How can I help you today?";
+    }
+}
 
 
 // Connect to avatar service
 // Connect to avatar service
-function connectAvatar() {
+async function connectAvatar() {
     const cogSvcRegion = "westus2";
     const cogSvcSubKey = "27506bcd68114a929ef02cacc8f6b279";
     if (cogSvcSubKey === '') {
@@ -70,7 +110,6 @@ function connectAvatar() {
 
     speechRecognizer = SpeechSDK.SpeechRecognizer.FromConfig(speechRecognitionConfig, autoDetectSourceLanguageConfig, SpeechSDK.AudioConfig.fromDefaultMicrophoneInput());
 
-
     const azureOpenAIEndpoint = "https://justin-openai-demo.openai.azure.com/";
     const azureOpenAIApiKey = "1a1f8c2855a44483bbd3ef4c838996c8";
     const azureOpenAIDeploymentName = "justin-gpt-4o";
@@ -107,6 +146,10 @@ function connectAvatar() {
         }
     });
     xhr.send();
+
+    // Fetch and display the initial message
+    const initialMessage = await fetchInitialMessage();
+    addMessage('bot', initialMessage);
 }
 
 
@@ -239,7 +282,7 @@ function initMessages() {
     messages = []
 
     if (dataSources.length === 0) {
-        let systemPrompt = "You are a MacDonald manager to take orders from customers. You can do 2 functions. Take orders from customers and cancel orders for customers. If the customer wants to take orders, you can only take orders for [big mac, cheeseburger, milo and coca-cola]. If the customer wants to remove items, you can also remove items from the cart that the user has oredered or remove specific items from the cart if the user tells you to do so. E.g The customer says I would like 1 Cheeseburger removed or remove cheeseburger. Tell him that 1 cheeseburger has been removed from the cart, depending on the quantity in numbers. After the customer has said something, just ask him if he would like anything else, no need to repeat the menu again. Example: Customer: I would like 1 big mac. Response: 1 big mac, anything else? If what the customer says is not part of the items that you are trained on, tell them that You could not pick up their owner and tell them to please repeat their order unless they are telling to clear their cart or remove an item for their cart. You do not have to give them  the items that you take orders for. If the customer says he has nothing else to order, say 'Please proceed with checkout'. If the user says Clear Cart or anything along the lines or clearing cart, repeat back 'Cart has been cleared' Nothing else is to be included in the message";
+        let systemPrompt = "You are a MacDonald manager to take orders from customers. You can do 2 functions. Take orders from customers and cancel orders for customers. If the customer wants to take orders, you can only take orders for [big mac, cheeseburger, milo and coca-cola]. If the customer wants to remove items, you can also remove items from the cart that the user has oredered or remove specific items from the cart if the user tells you to do so. E.g The customer says I would like 1 Cheeseburger removed or remove cheeseburger. Tell him that 1 cheeseburger has been removed from the cart, depending on the quantity in numbers. After the customer has said something, just ask him if he would like anything else, no need to repeat the menu again. Example: Customer: I would like 1 big mac. Response: 1 big mac, anything else? If what the customer says is not part of the items that you are trained on, tell them that 'Sorry, I couldn't catch your order. Could you please repeat it for me? Please refer to the menu on the right!' unless they are telling to clear their cart or remove an item for their cart. You do not have to give them  the items that you take orders for. If the customer says he has nothing else to order, say 'Please proceed with checkout'. If the user says Clear Cart or anything along the lines or clearing cart, repeat back 'Cart has been cleared' Nothing else is to be included in the message";
         let systemMessage = {
             role: 'system',
             content: systemPrompt
@@ -331,7 +374,6 @@ function extractQuantity(text) {
 }
 
 
-// Function to add items to cart
 function addToCart(itemName, itemPrice, lowerText) {
     let quantity = extractQuantity(lowerText);
     // Check if item already exists in cart
@@ -342,14 +384,27 @@ function addToCart(itemName, itemPrice, lowerText) {
         finalCart.push({ name: itemName, price: itemPrice, quantity: quantity }); // Add new item to cart
     }
     updateCartDisplay(); // Update cart display
+
+    // Animate cart item
+    const cartItems = document.getElementById('cartItems');
+    cartItems.classList.add('bounce'); // Add animation class
+    cartItems.addEventListener('animationend', () => {
+        cartItems.classList.remove('bounce');
+    }, { once: true }); // Ensure the event listener is called only once
 }
 
 function emptyCart() {
     const cartItems = document.getElementById('cartItems');
-    cartItems.innerHTML = '';
-    finalCart = [];
-}
+    cartItems.classList.add('shake'); // Add animation class
 
+    // Wait for the animation to complete before actually emptying the cart
+    cartItems.addEventListener('animationend', () => {
+        cartItems.classList.remove('shake');
+        cartItems.innerHTML = '';
+        finalCart = [];
+        updateCartDisplay(); // Update the cart display to reflect the empty cart
+    }, { once: true }); // Ensure the event listener is called only once
+}
 function removeItem(itemName) {
     let quantityToRemove = extractQuantity(lowerText);
     // Find the item in the cart
@@ -476,25 +531,44 @@ function stopSpeaking() {
 }
 
 
-// Function to add a message
+// chat.js
+
+// chat.js
+
 function addMessage(speaker, text, imgUrlPath = '') {
     let chatHistoryTextArea = document.getElementById('chatHistoryContent');
     let messageDiv = document.createElement('div');
-    messageDiv.className = `message ${speaker}`;
+    messageDiv.className = `message ${speaker} new-message`; // Add animation class
 
     let bubbleDiv = document.createElement('div');
     bubbleDiv.className = 'bubble';
-
     bubbleDiv.innerHTML = imgUrlPath.trim() ? imgUrlPath.trim() + text : text;
 
-    messageDiv.appendChild(bubbleDiv);
+    let iconDiv = document.createElement('div');
+    iconDiv.className = 'icon';
+
+    let iconImg = document.createElement('img');
+    iconImg.className = 'speaker-icon';
+    iconImg.src = speaker === 'user' ? 'image/user-icon.png' : 'image/bot-icon.png'; // Path to the user and bot icons
+
+    iconDiv.appendChild(iconImg);
+
+    if (speaker === 'user') {
+        messageDiv.appendChild(bubbleDiv);
+        messageDiv.appendChild(iconDiv);
+    } else {
+        messageDiv.appendChild(iconDiv);
+        messageDiv.appendChild(bubbleDiv);
+    }
+
     chatHistoryTextArea.appendChild(messageDiv);
-
     chatHistoryTextArea.scrollTop = chatHistoryTextArea.scrollHeight;
+
+    // Remove animation class after animation ends
+    messageDiv.addEventListener('animationend', () => {
+        messageDiv.classList.remove('new-message');
+    });
 }
-
-
-
 
 function handleUserQuery(userQuery, userQueryHTML, imgUrlPath) {
     let contentMessage = userQuery
@@ -773,8 +847,13 @@ window.stopSession = () => {
 }
 
 window.clearChatHistory = () => {
-    document.getElementById('chatHistoryContent').innerHTML = ''
-    initMessages()
+    const chatHistoryContent = document.getElementById('chatHistoryContent');
+    chatHistoryContent.classList.add('shake'); // Add animation class
+    chatHistoryContent.addEventListener('animationend', () => {
+        chatHistoryContent.classList.remove('shake');
+        chatHistoryContent.innerHTML = '';
+        initMessages();
+    });
 }
 
 window.microphone = () => {
@@ -895,17 +974,16 @@ window.updatePrivateEndpoint = () => {
 }
 
 // Existing code...  
-
 function updateCartDisplay() {
     var cartItemsElement = document.getElementById('cartItems');
-    cartItemsElement.innerHTML = ''; // Clear previous items  
+    cartItemsElement.innerHTML = ''; // Clear previous items
 
     finalCart.forEach(function (item, index) {
         var li = document.createElement('li');
         li.className = 'cart-item';
 
         var img = document.createElement('img');
-        img.src = getImageUrl(item.name); // Function to get image URL based on item name  
+        img.src = getImageUrl(item.name); // Function to get image URL based on item name
 
         var content = document.createElement('div');
         content.className = 'cart-item-content';
@@ -957,6 +1035,9 @@ function updateCartDisplay() {
         cartItemsElement.appendChild(li);
     });
 }
+
+
+// Function to remove a quantity of an item from the cart
 
 // Function to remove a quantity of an item from the cart
 function removeItemFromCart(index, removeQuantity) {
@@ -1052,3 +1133,5 @@ function hideHelpModal() {
 
 // Example usage for showing the modal (you can modify this as needed)
 document.getElementById('stopSession').onclick = showHelpModal;
+
+

@@ -150,13 +150,21 @@
                <div id="chatHistoryContent" hidden></div>
             </div>
          </div>
-      </div><div id="menu" hidden>
-         <h2>Menu</h2>
+      </div>
+      <div id="menu" hidden>
+         <h2 class="shoppingheader">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+               <path d="M2 6h20v2H2zm0 5h20v2H2zm0 5h20v2H2z"/>
+             </svg>
+             
+            Menu
+         </h2>
          <div class="menu-item">
             <img src="./image/cheeseburger.png" alt="Cheeseburger">
             <div class="item-details">
                <h3>Cheeseburger <br><span class="price">$5.99</span></h3>
-               <input type="number" id="quantity-cheeseburger" class="quantity-input" placeholder="Qty" min="1" style="width: 60px;">
+               <input type="number" id="quantity-cheeseburger" class="quantity-input" placeholder="Qty" min="1"
+                  style="width: 60px;">
                <button onclick="addToCartFromMenu('Cheeseburger', 5.99, 'quantity-cheeseburger')">Add to Cart</button>
             </div>
          </div>
@@ -164,7 +172,8 @@
             <img src="./image/milo.png" alt="Milo">
             <div class="item-details">
                <h3>Milo <br><span class="price">$2.49</span></h3>
-               <input type="number" id="quantity-milo" class="quantity-input" placeholder="Qty" min="1" style="width: 60px;">
+               <input type="number" id="quantity-milo" class="quantity-input" placeholder="Qty" min="1"
+                  style="width: 60px;">
                <button onclick="addToCartFromMenu('Milo', 2.49, 'quantity-milo')">Add to Cart</button>
             </div>
          </div>
@@ -172,7 +181,8 @@
             <img src="./image/big_mac.png" alt="Big Mac">
             <div class="item-details">
                <h3>Big Mac <br><span class="price">$6.99</span></h3>
-               <input type="number" id="quantity-big-mac" class="quantity-input" placeholder="Qty" min="1" style="width: 60px;">
+               <input type="number" id="quantity-big-mac" class="quantity-input" placeholder="Qty" min="1"
+                  style="width: 60px;">
                <button onclick="addToCartFromMenu('Big Mac', 6.99, 'quantity-big-mac')">Add to Cart</button>
             </div>
          </div>
@@ -180,7 +190,8 @@
             <img src="./image/coke.png" alt="Coca-Cola">
             <div class="item-details">
                <h3>Coca-Cola <br><span class="price">$7.99</span></h3>
-               <input type="number" id="quantity-coca-cola" class="quantity-input" placeholder="Qty" min="1" style="width: 60px;">
+               <input type="number" id="quantity-coca-cola" class="quantity-input" placeholder="Qty" min="1"
+                  style="width: 60px;">
                <button onclick="addToCartFromMenu('Coca-Cola', 7.99, 'quantity-coca-cola')">Add to Cart</button>
             </div>
          </div>
@@ -188,15 +199,27 @@
             <img src="./image/wagyu.png" alt="Wagyu Steak">
             <div class="item-details">
                <h3>Wagyu Steak<br><span class="price">Out of Stock $69.99</span></h3>
-               <input type="number" id="quantity-wagyu-steak" class="quantity-input" placeholder="Qty" min="1" style="width: 60px;" disabled>
+               <input type="number" id="quantity-wagyu-steak" class="quantity-input" placeholder="Qty" min="1"
+                  style="width: 60px;" disabled>
                <button disabled>Add to Cart</button>
             </div>
          </div>
       </div>
-      
 
-      <div id="cartDisplay"  hidden>
-         <h2 class="header">Your Cart</h2>
+
+      <div id="cartDisplay" hidden>
+         <h2 class="shoppingheader">
+            <svg class="cart-icon" width="24" height="24" viewBox="0 0 24 24" fill="none"
+               xmlns="http://www.w3.org/2000/svg">
+               <path d="M7 4H17L20 11H7L6 8H2" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+               <circle cx="9" cy="19" r="2" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+               <circle cx="17" cy="19" r="2" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+            </svg>
+            Your Cart
+         </h2>
          <ul id="cartItems"></ul>
          <button id="clearCartButton" class="bottom-left" onclick="emptyCart()">Empty Cart</button>
          <button id="checkoutButton" class="bottom-right" onclick="checkout()">Checkout</button>
