@@ -127,8 +127,7 @@ html {
 }
 
 img {
-  border: none;
-  max-width: 100%;
+  border: none; 
 }
 
 input[type=radio] {
@@ -1203,7 +1202,7 @@ a span:nth-child(4) {
 }
 
 .speaker-icon {
-    width: 100%;
+    width: 150%;
     height: 100%;
     border-radius: 50%;
 }
