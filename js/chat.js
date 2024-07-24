@@ -227,6 +227,8 @@ function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential) {
                 document.getElementById('menu').style.visibility = 'visible';
                 document.getElementById('menu').removeAttribute('hidden');
                 document.getElementById('chatHistoryHeader').style.visibility = 'visible';
+                document.getElementById('instructionsBox').style.visibility = 'visible';
+                document.getElementById('instructionsBox').removeAttribute('hidden');
                 document.getElementById('chatHistoryContent').style.visibility = 'visible';
                 document.getElementById('cartDisplay').hidden = false
                 document.getElementById('menu').hidden = false
@@ -501,6 +503,7 @@ function speakNext(text, endingSilenceMs = 0) {
 
 function removeFromCart(product, quantity) {
     // Find the item in the cart
+    console.log("hi")
     let existingItem = finalCart.find(item => item.name.toLowerCase() === product.toLowerCase());
 
     if (existingItem) {
@@ -1106,10 +1109,12 @@ function startSession() {
     document.getElementById('chatHistory').style.visibility = 'visible';
     document.getElementById('chatHistoryHeader').style.visibility = 'visible';
     document.getElementById('chatHistoryContent').style.visibility = 'visible';
+    document.getElementById('instructionsBox').style.visibility = 'visible';
 
     document.getElementById('chatHistory').removeAttribute('hidden');
     document.getElementById('chatHistoryHeader').removeAttribute('hidden');
     document.getElementById('chatHistoryContent').removeAttribute('hidden');
+    document.getElementById('instructionsBox').removeAttribute('hidden');
 }
 
 
