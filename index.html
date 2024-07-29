@@ -166,7 +166,7 @@
                <span id="cartCount">0</span>
            </div>
          </div>
-         <div id="instructionsBox" style="background-color: white; border: 1px solid #ccc; border-radius: 10px; padding: 20px; margin-top: 20px;" hidden>
+         <!-- <div id="instructionsBox" style="background-color: white; border: 1px solid #ccc; border-radius: 10px; padding: 20px; margin-top: 20px;" hidden>
             <h2 class = "shoppingheader" style = "padding-bottom: 5px;" >Instructions</h2>
             <ul>
               <li style = "font-size: 16px">Ensure that the AI assistant has been loaded and microphine has been turned on.</li>
@@ -179,12 +179,22 @@
               <li style = "font-size: 16px"><b>Upcoming Features:</b> Order item via Menu Number</li>
               <li style = "font-size: 16px">    &ensp;i.e "I would like to <b>order</b> one No. 1"  	&#40;Cheeseburger in this case.&#41;</li>
             </ul>
-          </div>
+          </div> -->
       </div>
 <!-- Replace the current menu div with this updated version -->
-<div id="menu">
+<div id="menu" style = "visibility: hidden;">
 
-    <!-- Menu items will be dynamically generated here -->
+   <div class="tabs">
+      <button class="tablink" onclick="openMenu(event, 'Drinks')" id="defaultOpen">Drinks</button>
+      <button class="tablink" onclick="openMenu(event, 'Food')">Food</button>
+  </div>
+  
+  <div id="Drinks" class="tabcontent"> 
+  </div>
+  
+  <div id="Food" class="tabcontent"> 
+  </div>
+  
 </div>
 
  

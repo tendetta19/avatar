@@ -18,11 +18,15 @@ var sessionActive = false
 var lastSpeakTime
 var imgUrl = ""
 var finalCart = []
+var menuOpen = false;
 
 async function fetchInitialMessage() {
     document.getElementById('menu').style.visibility = 'visible';
     document.getElementById('menu').removeAttribute('hidden');
-    generateMenu();
+    if (menuOpen == false){
+        generateMenu();
+        menuOpen = true;
+    };
     const azureOpenAIEndpoint = "https://justin-openai-demo.openai.azure.com/";
     const azureOpenAIApiKey = "1a1f8c2855a44483bbd3ef4c838996c8";
     const azureOpenAIDeploymentName = "justin-gpt-4o";
@@ -1178,17 +1182,38 @@ function showHelpModal() {
 function hideHelpModal() {
     document.getElementById('helpModal').style.display = 'none';
 } 
+ 
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById("defaultOpen").click();
+});
 
-// Add this at the top of chat.js
+function openMenu(evt, menuName) {
+    var i, tabcontent, tablinks;
+
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    tablinks = document.getElementsByClassName("tablink");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].style.backgroundColor = "";
+    }
+
+    document.getElementById(menuName).style.display = "block";
+    document.getElementById(menuName).style.display = "grid";
+    evt.currentTarget.style.backgroundColor = 'red';
+}
+
 const menuItems = {
-    drinks: [
+    drinks: [ 
         { name: 'Coca-Cola', price: 1.99, image: './image/coke.png' },
         { name: 'Milo', price: 2.49, image: './image/milo.png' },
         { name: 'Orange Juice', price: 2.99, image: './image/orange_juice.png' },
         { name: 'Coffee', price: 1.49, image: './image/coffee.png' },
         { name: 'Tea', price: 1.29, image: './image/tea.png' }
     ],
-    food: [
+    food: [ 
         { name: 'Big Mac', price: 6.99, image: './image/big_mac.png' },
         { name: 'Cheeseburger', price: 5.99, image: './image/cheeseburger.png' },
         { name: 'Chicken Nuggets', price: 4.99, image: './image/nuggets.png' },
@@ -1196,64 +1221,65 @@ const menuItems = {
         { name: 'Salad', price: 3.99, image: './image/salad.png' }
     ]
 };
-// Function to generate the menu dynamically
+
 function generateMenu() { 
-    const menuContainer = document.getElementById('menu');
-    menuContainer.innerHTML = ''; // Clear existing menu items
+    const drinksContainer = document.getElementById('Drinks');
+    const foodContainer = document.getElementById('Food');
+ 
 
-    for (const category in menuItems) {
-        const categoryDiv = document.createElement('div');
-        categoryDiv.className = 'menu-category';
-        const categoryTitle = document.createElement('h2');
-        categoryTitle.textContent = category.charAt(0).toUpperCase() + category.slice(1);
-        categoryDiv.appendChild(categoryTitle);
+    menuItems.drinks.forEach(item => {
+        drinksContainer.appendChild(createMenuItem(item));
+    });
 
-        menuItems[category].forEach(item => {
-            const itemDiv = document.createElement('div');
-            itemDiv.className = 'menu-item';
-
-            const itemImage = document.createElement('img');
-            itemImage.src = item.image;
-            itemImage.alt = item.name;
-
-            const itemDetails = document.createElement('div');
-            itemDetails.className = 'item-details';
-
-            const itemName = document.createElement('h3');
-            itemName.innerHTML = `${item.name} <br><span class="price">$${item.price.toFixed(2)}</span>`;
-
-            const quantityInput = document.createElement('input');
-            quantityInput.type = 'number';
-            quantityInput.className = 'quantity-input';
-            quantityInput.placeholder = 'Qty';
-            quantityInput.min = 1;
-            quantityInput.style.width = '60px';  
-            
-            const addButton = document.createElement('button');
-            addButton.textContent = 'Add to Cart';
-            addButton.onclick = () => {
-                const quantity = quantityInput.value;
-                if (quantity && quantity > 0) {
-                    console.log(quantity);
-                    addToCartFromMenu(item.name, item.price, quantity);
-                } else {
-                    alert('Please enter a valid quantity');
-                }
-            };
-
-            itemDetails.appendChild(itemName);
-            itemDetails.appendChild(quantityInput);
-            itemDetails.appendChild(addButton);
-
-            itemDiv.appendChild(itemImage);
-            itemDiv.appendChild(itemDetails);
-            categoryDiv.appendChild(itemDiv);
-        });
-
-        menuContainer.appendChild(categoryDiv);
-    }
+    menuItems.food.forEach(item => {
+        foodContainer.appendChild(createMenuItem(item));
+    });
 }
+function createMenuItem(item) {
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'menu-item';
 
+    const itemImage = document.createElement('img');
+    itemImage.src = item.image;
+    itemImage.alt = item.name;
+
+    const itemDetails = document.createElement('div');
+    itemDetails.className = 'item-details';
+
+    const itemName = document.createElement('h3');
+    itemName.innerHTML = `${item.name} <br><span class="price">$${item.price.toFixed(2)}</span>`;
+
+    const quantityInput = document.createElement('input');
+    quantityInput.type = 'number';
+    quantityInput.className = 'quantity-input';
+    quantityInput.placeholder = 'Qty';
+    quantityInput.min = 1;
+    quantityInput.style.width = '60px';
+
+    const addButton = document.createElement('button');
+    addButton.textContent = 'Add to Cart';
+    addButton.onclick = () => {
+        const quantity = quantityInput.value;
+        if (quantity && quantity > 0) {
+            addToCart(item.name, item.price, quantity);
+        } else {
+            alert('Please enter a valid quantity');
+        }
+    };
+
+    const quantityContainer = document.createElement('div');
+    quantityContainer.className = 'quantity-container';
+    quantityContainer.appendChild(quantityInput);
+    quantityContainer.appendChild(addButton);
+
+    itemDetails.appendChild(itemName);
+    itemDetails.appendChild(quantityContainer);
+
+    itemDiv.appendChild(itemImage);
+    itemDiv.appendChild(itemDetails);
+
+    return itemDiv;
+}
 window.onload = () => { 
     setInterval(() => {
         checkHung()
