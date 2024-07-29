@@ -176,6 +176,7 @@ function disconnectAvatar() {
 
 
 function showCart(){
+    console.log("Opening shopping cart!")
     document.getElementById('cartTab').style.visibility = 'visible';
     document.getElementById('cartTab').classList.add('open');
     document.getElementById('cartTab').classList.remove('close');
@@ -184,6 +185,7 @@ function showCart(){
 
 
 function hideCart(){
+    console.log("Hiding shopping cart!")
     document.getElementById('cartTab').style.visibility = 'hidden';
     document.getElementById('cartTab').classList.remove('open');
     document.getElementById('cartTab').classList.add('close');
@@ -314,8 +316,8 @@ function initMessages() {
     messages = []
 
     if (dataSources.length === 0) {
-        let systemPrompt = "You are a MacDonald manager to take orders from customers. You can do 2 functions. Take orders from customers and cancel orders for customers. If the customer wants to take orders, you can only take orders for [big mac, cheeseburger, milo and coca-cola]. If the customer wants to remove items, you can also remove items from the cart that the user has oredered or remove specific items from the cart if the user tells you to do so. E.g The customer says I would like 1 Cheeseburger removed or remove cheeseburger. Tell him that 1 cheeseburger has been removed from the cart, depending on the quantity in numbers. After the customer has said something, just ask him if he would like anything else, no need to repeat the menu again. Example: Customer: I would like 1 big mac. Response: 1 big mac, anything else? If what the customer says is not part of the items that you are trained on, tell them that 'Sorry, I couldn't catch your order. Could you please repeat it for me? Please refer to the menu on the right!' unless they are telling to clear their cart or remove an item for their cart. You do not have to give them  the items that you take orders for. If the customer says he has nothing else to order, say 'Please proceed with checkout'. If the user says Clear Cart or anything along the lines or clearing cart, repeat back 'Cart has been cleared' Nothing else is to be included in the message";
-        let systemMessage = {
+        let systemPrompt = "You are a MacDonald manager to take orders from customers. 1) If the customer tells you he would like swap menus, reply swapping menus. 2) If the customer tells you to swap to x menu, reply swapping to x menu. E.g Swap to drinks menu. Response: Swapping to drinks menu 3) Take orders from customers. You can only take orders for Drinks in [Coca-Cola, Milo, Orange Juice, Coffee, Tea]. You can only take orders for Food in [Big Mac, Cheeseburger, Chicken Nuggets, Fries, Salad]. 4) After the customer has said something, just ask him if he would like anything else, no need to repeat the menu again. Example: Customer: I would like 1 big mac. Response: 1 big mac, anything else? 5) Remove customer's ordered items. If the customer wants to remove items, you can also remove items from the cart that the user has oredered or remove specific items from the cart if the user tells you to do so. E.g The customer says I would like 1 Cheeseburger removed or remove cheeseburger. Tell him that 1 cheeseburger has been removed from the cart, depending on the quantity in numbers. 6) If what the customer says is not part of the items that you are trained on, tell them that 'Sorry, I couldn't catch your order. Could you please repeat it for me? Please refer to the menu on the right!' unless they are telling to clear their cart or remove an item for their cart or swapping menus. 7) You do not have to give them  the items that you take orders for. If the customer says he has nothing else to order, say 'Please proceed with checkout'. 8) If the user says Clear Cart or anything along the lines or clearing cart, repeat back 'Cart has been cleared' Nothing else is to be included in the message 9) If the user says Show Cart or show shopping cart, you reply Cart has been displayed 10) If the user says Hide Cart or hide shopping cart, you reply Cart has been hidden 11) If the user wants to view help or anything similiar, say help has been displayed";
+             let systemMessage = {
             role: 'system',
             content: systemPrompt
         }
@@ -438,9 +440,7 @@ function removeItem(itemName) {
         }
         updateCartDisplay(); // Update cart display
     }
-}
-
-function speakNext(text, endingSilenceMs = 0) {
+}function speakNext(text, endingSilenceMs = 0) {
     let ttsVoice = document.getElementById('ttsVoice').value;
     let personalVoiceSpeakerProfileID = document.getElementById('personalVoiceSpeakerProfileID').value;
     let ssml = `<speak version='1.0' xmlns='http://www.w3.org/2001/10/synthesis' xmlns:mstts='http://www.w3.org/2001/mstts' xml:lang='en-US'><voice name='${ttsVoice}'><mstts:ttsembedding speakerProfileId='${personalVoiceSpeakerProfileID}'><mstts:leadingsilence-exact value='0'/>${htmlEncode(text)}</mstts:ttsembedding></voice></speak>`;
@@ -457,13 +457,25 @@ function speakNext(text, endingSilenceMs = 0) {
                 console.log(`Speech synthesized to speaker for text [ ${text} ]. Result ID: ${result.resultId}`);
                 lastSpeakTime = new Date();
                 var lowerText = text.toLowerCase();
-
+                console.log("Lower text is " + lowerText);
+                // Check for empty cart command
+                if (lowerText.includes("help has been displayed")) {
+                    alert("Commands:\nOrder food: I would like 1 Cheeseburger\nRemove food: Remove 1 Milo\nShow cart: Show my cart\nHide Cart: Hide my cart\nSwap to Food/Drink Menu: Swap my menu to food/drink menu");
+                    return;
+                }
                 // Check for empty cart command
                 if (lowerText.includes("cart has been cleared") || lowerText.includes("cart emptied")) {
                     emptyCart();
                     return;
                 }
-
+                if (lowerText.includes('cart has been hidden')){ 
+                    hideCart();
+                    return;
+                } 
+                if (lowerText.includes('cart has been displayed')){ 
+                    showCart();
+                    return;
+                }  
                 // Detect removal
                 if (lowerText.includes('removed')) {
                     const removedPattern = /(\d+)\s*(\w+)\s*has\s*been\s*removed/;
@@ -473,21 +485,25 @@ function speakNext(text, endingSilenceMs = 0) {
                         const product = match[2];
                         removeFromCart(product, quantity);
                     }
-                } else {
-                    if (lowerText.includes('cheeseburger')) {
-                        addToCart('Cheeseburger', 5.99, lowerText);
-                    }
-
-                    if (lowerText.includes('big mac')) {
-                        addToCart('Big Mac', 6.99, lowerText);
-                    }
-
-                    if (lowerText.includes('coca-cola')) {
-                        addToCart('Coca-cola', 7.99, lowerText);
-                    }
-
-                    if (lowerText.includes('milo')) {
-                        addToCart('Milo', 2.49, lowerText);
+                } else if (lowerText.includes('swapping to drinks menu')) {
+                    openMenu({ currentTarget: document.getElementById('defaultOpen') }, 'Drinks');
+                } else if (lowerText.includes('swapping to food menu')) {
+                    openMenu({ currentTarget: document.querySelector('.tablink:not(#defaultOpen)') }, 'Food');
+                } 
+                else {
+                    // Loop through drinks and food menu items to add to cart
+                    for (const category of Object.keys(menuItems)) {
+                        for (const item of menuItems[category]) {
+                            if (lowerText.includes(item.name.toLowerCase())) {
+                                // Swap to the relevant tab before adding the item
+                                if (category === 'drinks') {
+                                    openMenu({ currentTarget: document.getElementById('defaultOpen') }, 'Drinks');
+                                } else if (category === 'food') {
+                                    openMenu({ currentTarget: document.querySelector('.tablink:not(#defaultOpen)') }, 'Food');
+                                }
+                                addToCart(item.name, item.price, lowerText);
+                            }
+                        }
                     }
                 }
 
@@ -516,6 +532,44 @@ function speakNext(text, endingSilenceMs = 0) {
             }
         );
 }
+
+function openMenu(evt, menuName) {
+    var i, tabcontent, tablinks;
+
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    tablinks = document.getElementsByClassName("tablink");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].style.backgroundColor = "";
+    }
+
+    document.getElementById(menuName).style.display = "block";
+    document.getElementById(menuName).style.display = "grid";
+    evt.currentTarget.style.backgroundColor = 'red';
+}
+
+
+function openMenu(evt, menuName) {
+    var i, tabcontent, tablinks;
+
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+
+    tablinks = document.getElementsByClassName("tablink");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].style.backgroundColor = "";
+    }
+
+    document.getElementById(menuName).style.display = "block";
+    document.getElementById(menuName).style.display = "grid";
+    evt.currentTarget.style.backgroundColor = 'red';
+}
+
 
 function removeFromCart(product, quantity) {
     // Find the item in the cart
