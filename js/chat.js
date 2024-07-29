@@ -460,7 +460,7 @@ function removeItem(itemName) {
                 console.log("Lower text is " + lowerText);
                 // Check for empty cart command
                 if (lowerText.includes("help has been displayed")) {
-                    alert("Commands:\nOrder food: I would like 1 Cheeseburger\nRemove food: Remove 1 Milo\nShow cart: Show my cart\nHide Cart: Hide my cart\nSwap to Food/Drink Menu: Swap my menu to food/drink menu");
+                    alert("Commands:\nOrder food: I would like 1 Cheeseburger\nRemove food: Remove 1 Milo\nShow cart: Show my cart\nHide Cart: Hide my cart\nSwap to Food/Drink Menu: Swap my menu to food/drink menu\nClear Cart: Please clear my cart.");
                     return;
                 }
                 // Check for empty cart command
