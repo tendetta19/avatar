@@ -44,34 +44,7 @@ body {
 
 /* 
 body {   
-  } */
-button {
-  background-color: #d84a38;
-  border: none;
-  border-radius: 2px;
-  color: white;
-  font-family: 'Roboto', sans-serif;
-  font-size: 0.8em;
-  margin: 10px 0 1em 0;
-  padding: 0.5em 0.7em 0.6em 0.7em;
-}
-
-button:active {
-  background-color: #cf402f;
-}
-
-button:hover {
-  background-color: #cf402f;
-}
-
-button[disabled] {
-  color: #ccc;
-}
-
-button[disabled]:hover {
-  background-color: #d84a38;
-}
-
+  } */ 
 canvas {
   background-color: #ccc;
   max-width: 100%;
@@ -299,14 +272,34 @@ textarea {
 .bottom-right {
   position: absolute;
   bottom: 10px;
-  right: 10px; /* Adjusted to ensure it's aligned with the right edge */
+  right: 10px; 
+  cursor: pointer;
+  
+  border: none;
+  padding: 15px 20px;
+  border-radius: 20px;
+  font-family: Poppins;
+  font-size: large;
+  background-color: #2F2F2F;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #eee;
+  box-shadow: 0 10px 20px #2F2F2F77;/* Adjusted to ensure it's aligned with the right edge */
 }
 
 .bottom-left {
   position: absolute;
   bottom: 10px;
-  left: 10px; /* Adjusted to ensure it's aligned with the left edge */
-}
+  left: 10px;     background-color: #eee;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 20px;
+  font-family: Poppins;
+  font-size: large;
+  cursor: pointer;
+}/* Adjusted to ensure it's aligned with the left edge */
+
 #cartItems {
   list-style-type: none;
   padding: 0;
@@ -334,13 +327,14 @@ textarea {
 }
 
 .item-name { 
-  font-size: 15px;
+  font-size: 20px;
 }
 
 .item-price {
   width: 100px; /* Fixed width for price column */
-  text-align: right;
+  text-align: left;
   font-size: 15px;
+  font-size: 20px;
 }
 
 .cart-item input[type="number"] {
@@ -1265,22 +1259,7 @@ a span:nth-child(4) {
 .hidden {
   display: none;
 }
-
-.close-button {
-  background-color: #d84a38;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-  font-size: 14px;
-}
-
-.close-button:hover {
-  background-color: #cf402f;
-}
-
+ 
 /* Include existing styles from the provided CSS */
 #chatHistory {
   position: absolute;
@@ -1341,24 +1320,7 @@ a span:nth-child(4) {
 
 .hidden {
   display: none;
-}
-
-.close-button {
-  background-color: #d84a38;
-  color: white;
-  border: none;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-top: 10px;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-
-.close-button:hover {
-  background-color: #cf402f;
-}
+} 
 
 .modal {
   display: none;
@@ -1488,4 +1450,114 @@ a span:nth-child(4) {
   .bounce {
     animation: bounce 0.3s ease-out;
   }
-  
+  body.activeTabCart .cartTab {
+    right: 0;
+}
+.cartTab {
+    right: -400px;
+    transition: 0.5s;
+}
+.cartTab {
+    width: 400px;
+    max-width: 100%;
+    background-color: #353432;
+    color: #eee;
+    position: fixed;
+    top: 0;
+    right: 0px;
+    bottom: 0;
+    display: grid;
+    grid-template-rows: 70px 1fr 70px;
+    z-index: 1000;
+}
+.cart-open .flex-container {
+  transform: translateX(-300px); /* Adjust this value based on the width of your cartTab */
+  transition: transform 0.3s ease;
+}
+
+
+.cartTab.open {
+  right: 0; /* Move into view */
+}
+
+.cartTab.close {
+  right: -300px; /* Move out of view */
+}
+.cartTab h1 {
+  padding: 20px;
+  margin: 0;
+  font-weight: 300;
+  font-family: 300 2.4em/1 "Lato", sans-serifl;
+
+}
+.cartTab .btn {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+.cartTab button {
+  background-color: #E8BC0E;
+  border: none;
+  font-family: Poppins;
+  font-weight: 500;
+  cursor: pointer;
+  min-width: 30px;
+  font-size: 150%;
+}
+
+.cartTab .closebutton {
+  background-color: #eee;
+}
+
+.icon-cart{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+}
+
+
+.icon-cart svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+}
+
+
+.icon-cart span {
+  position: absolute;
+  background-color: red;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  color: #fff;
+  top: -10px;
+  right: -10px;
+  font-size: 12px;
+}
+
+.cart-summary-container {
+  font: 300 1.25em / 1.4 "Lato", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* Align items to the right */
+  margin-top: 20px;
+  padding-top: 10px; 
+  font-size: 18px; 
+  bottom: 100px; 
+}
+
+.cart-summary {
+  margin-top: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between; /* Ensure space between label and value */
+}
+
+.quantity {
+  padding:10px;
+}

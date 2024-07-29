@@ -20,6 +20,9 @@ var imgUrl = ""
 var finalCart = []
 
 async function fetchInitialMessage() {
+    document.getElementById('menu').style.visibility = 'visible';
+    document.getElementById('menu').removeAttribute('hidden');
+    generateMenu();
     const azureOpenAIEndpoint = "https://justin-openai-demo.openai.azure.com/";
     const azureOpenAIApiKey = "1a1f8c2855a44483bbd3ef4c838996c8";
     const azureOpenAIDeploymentName = "justin-gpt-4o";
@@ -167,6 +170,27 @@ function disconnectAvatar() {
     sessionActive = false
 }
 
+
+function showCart(){
+    document.getElementById('cartTab').style.visibility = 'visible';
+    document.getElementById('cartTab').classList.add('open');
+    document.getElementById('cartTab').classList.remove('close');
+    document.body.classList.add('cart-open');
+}
+
+
+function hideCart(){
+    document.getElementById('cartTab').style.visibility = 'hidden';
+    document.getElementById('cartTab').classList.remove('open');
+    document.getElementById('cartTab').classList.add('close');
+    document.body.classList.remove('cart-open');
+}
+function updateCartCount() {
+    const cartCountElement = document.getElementById('cartCount');
+    const totalItems = finalCart.reduce((acc, item) => acc + item.quantity, 0);
+    cartCountElement.textContent = totalItems;
+}
+
 // Setup WebRTC
 function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential) {
     // Create WebRTC peer connection
@@ -224,6 +248,8 @@ function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential) {
                 document.getElementById('chatHistory').removeAttribute('hidden');
                 document.getElementById('chatHistoryHeader').removeAttribute('hidden');
                 document.getElementById('chatHistoryContent').removeAttribute('hidden');
+                document.getElementById('cartIcon').removeAttribute('hidden');
+                document.getElementById('cartIcon').style.visibility = 'visible';
                 document.getElementById('menu').style.visibility = 'visible';
                 document.getElementById('menu').removeAttribute('hidden');
                 document.getElementById('chatHistoryHeader').style.visibility = 'visible';
@@ -360,7 +386,7 @@ function extractQuantity(text) {
 }function addToCartFromMenu(itemName, itemPrice, quantityInputId) {
     // Get the quantity from the input box
     let quantityInput = document.getElementById(quantityInputId);
-    let quantity = parseInt(quantityInput.value, 10);
+    let quantity = quantityInputId;
     
     // Check if quantity is valid
     if (isNaN(quantity) || quantity <= 0) {
@@ -370,9 +396,7 @@ function extractQuantity(text) {
     
     // Add item to cart
     addToCart(itemName, itemPrice, `Quantity: ${quantity}`);
-    
-    // Clear the input box after adding to cart
-    quantityInput.value = '';
+     
 }
 
 
@@ -386,26 +410,14 @@ function addToCart(itemName, itemPrice, lowerText) {
         finalCart.push({ name: itemName, price: itemPrice, quantity: quantity }); // Add new item to cart
     }
     updateCartDisplay(); // Update cart display
-
-    // Animate cart item
-    const cartItems = document.getElementById('cartItems');
-    cartItems.classList.add('bounce'); // Add animation class
-    cartItems.addEventListener('animationend', () => {
-        cartItems.classList.remove('bounce');
-    }, { once: true }); // Ensure the event listener is called only once
+ 
 }
 
 function emptyCart() {
-    const cartItems = document.getElementById('cartItems');
-    cartItems.classList.add('shake'); // Add animation class
-
-    // Wait for the animation to complete before actually emptying the cart
-    cartItems.addEventListener('animationend', () => {
-        cartItems.classList.remove('shake');
-        cartItems.innerHTML = '';
-        finalCart = [];
-        updateCartDisplay(); // Update the cart display to reflect the empty cart
-    }, { once: true }); // Ensure the event listener is called only once
+    const cartItems = document.getElementById('listCart');
+    cartItems.innerHTML = '';
+    finalCart = [];
+    updateCartDisplay(); 
 }
 function removeItem(itemName) {
     let quantityToRemove = extractQuantity(lowerText);
@@ -817,13 +829,6 @@ function checkLastSpeak() {
     }
 }
 
-window.onload = () => {
-    setInterval(() => {
-        checkHung()
-        checkLastSpeak()
-    }, 2000) // Check session activity every 2 seconds
-}
-
 window.startSession = () => {
     connectAvatar();
 }
@@ -976,20 +981,23 @@ window.updatePrivateEndpoint = () => {
     }
 }
 
-// Existing code...  
 function updateCartDisplay() {
-    var cartItemsElement = document.getElementById('cartItems');
+    updateCartCount();
+    var cartItemsElement = document.querySelector('.listCart');
     cartItemsElement.innerHTML = ''; // Clear previous items
 
+    var subtotal = 0;
+
     finalCart.forEach(function (item, index) {
-        var li = document.createElement('li');
-        li.className = 'cart-item';
+        var cartItemDiv = document.createElement('div');
+        cartItemDiv.className = 'cart-item';
 
         var img = document.createElement('img');
         img.src = getImageUrl(item.name); // Function to get image URL based on item name
+        img.alt = item.name;
 
-        var content = document.createElement('div');
-        content.className = 'cart-item-content';
+        var contentDiv = document.createElement('div');
+        contentDiv.className = 'cart-item-content';
 
         var itemName = document.createElement('span');
         itemName.className = 'item-name';
@@ -999,47 +1007,75 @@ function updateCartDisplay() {
         itemPrice.className = 'item-price';
         itemPrice.textContent = `$${(item.price * item.quantity).toFixed(2)}`;
 
-        var quantityInput = document.createElement('input');
-        quantityInput.type = 'number';
-        quantityInput.value = item.quantity;
-        quantityInput.min = 1;
-        quantityInput.max = 999;
-        quantityInput.onchange = function () {
-            updateItemQuantity(index, quantityInput.value);
+        var quantityDiv = document.createElement('div');
+        quantityDiv.className = 'quantity-controls';
+
+        var minusButton = document.createElement('button');
+        minusButton.className = 'minus-button';
+        minusButton.textContent = '-';
+        minusButton.onclick = function () {
+            updateItemQuantity(index, item.quantity - 1);
         };
 
-        var removeQuantityInput = document.createElement('input');
-        removeQuantityInput.type = 'number';
-        removeQuantityInput.value = 1;
-        removeQuantityInput.min = 1;
-        removeQuantityInput.max = item.quantity;
-        removeQuantityInput.className = 'remove-quantity-input';
+        var quantitySpan = document.createElement('span');
+        quantitySpan.className = 'quantity';
+        quantitySpan.textContent = item.quantity;
 
-        var removeButton = document.createElement('button');
-        removeButton.className = 'removeButton';
-        removeButton.textContent = 'X';
-        removeButton.onclick = function () {
-            var removeQuantity = parseInt(removeQuantityInput.value, 10);
-            if (isNaN(removeQuantity) || removeQuantity <= 0 || removeQuantity > item.quantity) {
-                alert('Please enter a valid quantity to remove.');
-                return;
-            }
-            removeItemFromCart(index, removeQuantity);
+        var plusButton = document.createElement('button');
+        plusButton.className = 'plus-button';
+        plusButton.textContent = '+';
+        plusButton.onclick = function () {
+            updateItemQuantity(index, item.quantity + 1);
         };
 
-        content.appendChild(itemName);
-        content.appendChild(itemPrice);
-        li.appendChild(img);
-        li.appendChild(content);
-        li.appendChild(quantityInput);
-        li.appendChild(removeQuantityInput);
-        li.appendChild(removeButton);
+        quantityDiv.appendChild(minusButton);
+        quantityDiv.appendChild(quantitySpan);
+        quantityDiv.appendChild(plusButton);
 
-        cartItemsElement.appendChild(li);
+        contentDiv.appendChild(itemName);
+        contentDiv.appendChild(itemPrice);
+        cartItemDiv.appendChild(img);
+        cartItemDiv.appendChild(contentDiv);
+        cartItemDiv.appendChild(quantityDiv);
+        cartItemsElement.appendChild(cartItemDiv);
+
+        subtotal += item.price * item.quantity;
     });
+
+    var gst = subtotal * 0.07; // Assuming GST is 7%
+    var grandTotal = subtotal + gst;
+
+    // Create subtotal, GST, and grand total elements
+    var summaryDiv = document.createElement('div');
+    summaryDiv.className = 'cart-summary-container';
+
+    var subtotalDiv = document.createElement('div');
+    subtotalDiv.className = 'cart-summary';
+    subtotalDiv.innerHTML = `<strong>Subtotal:</strong> $${subtotal.toFixed(2)}`;
+
+    var gstDiv = document.createElement('div');
+    gstDiv.className = 'cart-summary';
+    gstDiv.innerHTML = `<strong>GST (7%):</strong> $${gst.toFixed(2)}`;
+
+    var grandTotalDiv = document.createElement('div');
+    grandTotalDiv.className = 'cart-summary';
+    grandTotalDiv.innerHTML = `<strong>Grand Total:</strong> $${grandTotal.toFixed(2)}`;
+
+    summaryDiv.appendChild(subtotalDiv);
+    summaryDiv.appendChild(gstDiv);
+    summaryDiv.appendChild(grandTotalDiv);
+
+    // Append the summary container to the cart
+    cartItemsElement.appendChild(summaryDiv);
 }
-
-
+function updateItemQuantity(index, newQuantity) {
+    if (newQuantity < 1) {
+        finalCart.splice(index, 1);
+    } else {
+        finalCart[index].quantity = newQuantity;
+    }
+    updateCartDisplay();
+}
 // Function to remove a quantity of an item from the cart
 
 // Function to remove a quantity of an item from the cart
@@ -1070,17 +1106,24 @@ function getImageUrl(itemName) {
     }
 }
 
-// Function to update item quantity in the cart  
-function updateItemQuantity(index, quantity) {
-    finalCart[index].quantity = parseInt(quantity);
+function updateItemQuantity(index, newQuantity) {
+    if (newQuantity < 1) {
+        finalCart.splice(index, 1);
+    } else {
+        finalCart[index].quantity = newQuantity;
+    }
     updateCartDisplay();
 }
- 
-// Function to handle checkout  
-function checkout() {
-    // Implement checkout functionality here  
-    alert('Proceeding to checkout with items: ' + JSON.stringify(finalCart));
+
+function calculateTotalCost() {
+    return finalCart.reduce((total, item) => total + (item.price * item.quantity), 0);
 }
+
+function checkout() {
+    const totalCost = calculateTotalCost();
+    alert('Proceeding to checkout with items: ' + JSON.stringify(finalCart) + '\nTotal cost: $' + totalCost.toFixed(2));
+}
+
 var pfx = ["webkit", "moz", "MS", "o", ""],
     clicked = false,
     layers = [
@@ -1105,7 +1148,7 @@ function handleClick() {
     document.querySelector('.finish-loading').classList.add('disableButton');
 }
 
-function startSession() {
+function startSession() {  
     document.getElementById('chatHistory').style.visibility = 'visible';
     document.getElementById('chatHistoryHeader').style.visibility = 'visible';
     document.getElementById('chatHistoryContent').style.visibility = 'visible';
@@ -1134,9 +1177,86 @@ function showHelpModal() {
 // Function to hide the help modal
 function hideHelpModal() {
     document.getElementById('helpModal').style.display = 'none';
+} 
+
+// Add this at the top of chat.js
+const menuItems = {
+    drinks: [
+        { name: 'Coca-Cola', price: 1.99, image: './image/coke.png' },
+        { name: 'Milo', price: 2.49, image: './image/milo.png' },
+        { name: 'Orange Juice', price: 2.99, image: './image/orange_juice.png' },
+        { name: 'Coffee', price: 1.49, image: './image/coffee.png' },
+        { name: 'Tea', price: 1.29, image: './image/tea.png' }
+    ],
+    food: [
+        { name: 'Big Mac', price: 6.99, image: './image/big_mac.png' },
+        { name: 'Cheeseburger', price: 5.99, image: './image/cheeseburger.png' },
+        { name: 'Chicken Nuggets', price: 4.99, image: './image/nuggets.png' },
+        { name: 'Fries', price: 2.49, image: './image/fries.png' },
+        { name: 'Salad', price: 3.99, image: './image/salad.png' }
+    ]
+};
+// Function to generate the menu dynamically
+function generateMenu() { 
+    const menuContainer = document.getElementById('menu');
+    menuContainer.innerHTML = ''; // Clear existing menu items
+
+    for (const category in menuItems) {
+        const categoryDiv = document.createElement('div');
+        categoryDiv.className = 'menu-category';
+        const categoryTitle = document.createElement('h2');
+        categoryTitle.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+        categoryDiv.appendChild(categoryTitle);
+
+        menuItems[category].forEach(item => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'menu-item';
+
+            const itemImage = document.createElement('img');
+            itemImage.src = item.image;
+            itemImage.alt = item.name;
+
+            const itemDetails = document.createElement('div');
+            itemDetails.className = 'item-details';
+
+            const itemName = document.createElement('h3');
+            itemName.innerHTML = `${item.name} <br><span class="price">$${item.price.toFixed(2)}</span>`;
+
+            const quantityInput = document.createElement('input');
+            quantityInput.type = 'number';
+            quantityInput.className = 'quantity-input';
+            quantityInput.placeholder = 'Qty';
+            quantityInput.min = 1;
+            quantityInput.style.width = '60px';  
+            
+            const addButton = document.createElement('button');
+            addButton.textContent = 'Add to Cart';
+            addButton.onclick = () => {
+                const quantity = quantityInput.value;
+                if (quantity && quantity > 0) {
+                    console.log(quantity);
+                    addToCartFromMenu(item.name, item.price, quantity);
+                } else {
+                    alert('Please enter a valid quantity');
+                }
+            };
+
+            itemDetails.appendChild(itemName);
+            itemDetails.appendChild(quantityInput);
+            itemDetails.appendChild(addButton);
+
+            itemDiv.appendChild(itemImage);
+            itemDiv.appendChild(itemDetails);
+            categoryDiv.appendChild(itemDiv);
+        });
+
+        menuContainer.appendChild(categoryDiv);
+    }
 }
 
-// Example usage for showing the modal (you can modify this as needed)
-document.getElementById('stopSession').onclick = showHelpModal;
-
-
+window.onload = () => { 
+    setInterval(() => {
+        checkHung()
+        checkLastSpeak()
+    }, 2000) // Check session activity every 2 seconds
+}
