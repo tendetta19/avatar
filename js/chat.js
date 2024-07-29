@@ -19,7 +19,13 @@ var lastSpeakTime
 var imgUrl = ""
 var finalCart = []
 var menuOpen = false;
+const { exec } = require('child_process');
 
+// Access the GitHub token from the environment variable
+const githubToken = process.env.TEST;
+
+
+console.log(githubToken)
 async function fetchInitialMessage() {
     document.getElementById('menu').style.visibility = 'visible';
     document.getElementById('menu').removeAttribute('hidden');
