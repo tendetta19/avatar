@@ -21,13 +21,7 @@ var finalCart = []
 var menuOpen = false;
  
 
-async function fetchInitialMessage() {
-    document.getElementById('menu').style.visibility = 'visible';
-    document.getElementById('menu').removeAttribute('hidden');
-    if (menuOpen == false){
-        generateMenu();
-        menuOpen = true;
-    };
+async function fetchInitialMessage() { 
 
 /*     const azureOpenAIEndpoint = prompt("Please key in your Azure OpenAI Endpoint:");
     const azureOpenAIApiKey = prompt("Please key in your Azure OpenAI API key:");
@@ -207,8 +201,7 @@ function updateCartCount() {
     const cartCountElement = document.getElementById('cartCount');
     const totalItems = finalCart.reduce((acc, item) => acc + item.quantity, 0);
     cartCountElement.textContent = totalItems;
-}
-
+} 
 // Setup WebRTC
 function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential) {
     // Create WebRTC peer connection
@@ -229,7 +222,14 @@ function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential) {
             audioElement.autoplay = true
 
             audioElement.onplaying = () => {
-                console.log(`WebRTC ${event.track.kind} channel connected.`)
+                console.log(`WebRTC ${event.track.kind} channel connected.`);
+                            
+                document.getElementById('menu').style.visibility = 'visible';
+                document.getElementById('menu').removeAttribute('hidden');
+                if (menuOpen == false){
+                    generateMenu();
+                    menuOpen = true;
+                };
             }
 
             document.getElementById('remoteVideo').appendChild(audioElement)
@@ -268,8 +268,6 @@ function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential) {
                 document.getElementById('chatHistoryContent').removeAttribute('hidden');
                 document.getElementById('cartIcon').removeAttribute('hidden');
                 document.getElementById('cartIcon').style.visibility = 'visible';
-                document.getElementById('menu').style.visibility = 'visible';
-                document.getElementById('menu').removeAttribute('hidden');
                 document.getElementById('chatHistoryHeader').style.visibility = 'visible';
                 document.getElementById('instructionsBox').style.visibility = 'visible';
                 document.getElementById('instructionsBox').removeAttribute('hidden');
@@ -325,6 +323,7 @@ function setupWebRTC(iceServerUrl, iceServerUsername, iceServerCredential) {
 
 // Initialize messages
 function initMessages() {
+    
     messages = []
 
     if (dataSources.length === 0) {
@@ -935,6 +934,7 @@ window.clearChatHistory = () => {
 }
 
 window.microphone = () => {
+
     if (document.getElementById('microphone').innerHTML === 'Stop Microphone') {
         // Stop microphone
         document.getElementById('microphone').disabled = true
@@ -949,7 +949,6 @@ window.microphone = () => {
 
         return
     }
-
 
 
     document.getElementById('microphone').disabled = true
