@@ -1309,6 +1309,7 @@ function createMenuItem(item) {
 
     const itemDetails = document.createElement('div');
     itemDetails.className = 'item-details';
+ 
 
     const itemName = document.createElement('h3');
     itemName.innerHTML = `${item.name} <br><span class="price">$${item.price.toFixed(2)}</span>`;
