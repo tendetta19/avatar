@@ -1657,3 +1657,8 @@ a span:nth-child(4) {
   grid-template-columns: repeat(3, 1fr);
 }
 
+#stopSession, #startSession, #microphone, #stopSpeaking, #clearChatHistory {
+  display: flex;
+  align-items: center;
+  text-decoration: none; 
+} 

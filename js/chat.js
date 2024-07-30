@@ -1286,9 +1286,8 @@ const menuItems = {
         { name: 'Fries', price: 2.49, image: './image/fries.png' },
         { name: 'Salad', price: 3.99, image: './image/salad.png' }
     ]
-};
-
-function generateMenu() { 
+}; 
+function generateMenu() {  
     const drinksContainer = document.getElementById('Drinks');
     const foodContainer = document.getElementById('Food');
  
@@ -1352,15 +1351,4 @@ window.onload = () => {
         checkLastSpeak()
     }, 2000) // Check session activity every 2 seconds
 }
-
-function handleClickOutsideCart(event) {
-    const cartTab = document.getElementById('cartTab');
-    const cartIcon = document.getElementById('cartIcon');
-
-    if (cartTab.style.visibility === 'visible' && !cartTab.contains(event.target) && !cartIcon.contains(event.target)) {
-        hideCart();
-    }
-}
-
-
-document.addEventListener('click', handleClickOutsideCart);
+ 
