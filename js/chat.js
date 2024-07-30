@@ -19,13 +19,8 @@ var lastSpeakTime
 var imgUrl = ""
 var finalCart = []
 var menuOpen = false;
-const { exec } = require('child_process');
+ 
 
-// Access the GitHub token from the environment variable
-const githubToken = process.env.TEST;
-
-
-console.log(githubToken)
 async function fetchInitialMessage() {
     document.getElementById('menu').style.visibility = 'visible';
     document.getElementById('menu').removeAttribute('hidden');
@@ -33,6 +28,11 @@ async function fetchInitialMessage() {
         generateMenu();
         menuOpen = true;
     };
+
+/*     const azureOpenAIEndpoint = prompt("Please key in your Azure OpenAI Endpoint:");
+    const azureOpenAIApiKey = prompt("Please key in your Azure OpenAI API key:");
+    const azureOpenAIDeploymentName = prompt("Please key in your deployment name:"); */
+
     const azureOpenAIEndpoint = "https://justin-openai-demo.openai.azure.com/";
     const azureOpenAIApiKey = "1a1f8c2855a44483bbd3ef4c838996c8";
     const azureOpenAIDeploymentName = "justin-gpt-4o";
@@ -42,7 +42,7 @@ async function fetchInitialMessage() {
         messages: [
             {
                 role: 'system',
-                content: "You are a MacDonald manager to take orders from customers. You can only take orders for [big mac, cheeseburger, milo and coke]."
+                content: "You are a MacDonald manager to take orders from customers."
             },
             {
                 role: 'user',
@@ -77,6 +77,9 @@ async function fetchInitialMessage() {
 // Connect to avatar service
 // Connect to avatar service
 async function connectAvatar() {
+    
+// const cogSvcRegion = prompt("Please key in your Azure Cognitive Services Region");
+//  const cogSvcSubKey = prompt("Please key in your Azure Cognitive Services subscription key:");
     const cogSvcRegion = "westus2";
     const cogSvcSubKey = "27506bcd68114a929ef02cacc8f6b279";
     if (cogSvcSubKey === '') {
@@ -122,6 +125,11 @@ async function connectAvatar() {
     var autoDetectSourceLanguageConfig = SpeechSDK.AutoDetectSourceLanguageConfig.fromLanguages(sttLocales);
 
     speechRecognizer = SpeechSDK.SpeechRecognizer.FromConfig(speechRecognitionConfig, autoDetectSourceLanguageConfig, SpeechSDK.AudioConfig.fromDefaultMicrophoneInput());
+    
+    // const azureOpenAIEndpoint = prompt("Please key in your Azure OpenAI Endpoint:");
+    // const azureOpenAIApiKey = prompt("Please key in your Azure OpenAI API Key:");
+    // const azureOpenAIDeploymentName = prompt("Please key in your Azure OpenAI Deployment Name:");
+
 
     const azureOpenAIEndpoint = "https://justin-openai-demo.openai.azure.com/";
     const azureOpenAIApiKey = "1a1f8c2855a44483bbd3ef4c838996c8";
@@ -181,8 +189,7 @@ function disconnectAvatar() {
 }
 
 
-function showCart(){
-    console.log("Opening shopping cart!")
+function showCart(){ 
     document.getElementById('cartTab').style.visibility = 'visible';
     document.getElementById('cartTab').classList.add('open');
     document.getElementById('cartTab').classList.remove('close');
@@ -190,8 +197,7 @@ function showCart(){
 }
 
 
-function hideCart(){
-    console.log("Hiding shopping cart!")
+function hideCart(){ 
     document.getElementById('cartTab').style.visibility = 'hidden';
     document.getElementById('cartTab').classList.remove('open');
     document.getElementById('cartTab').classList.add('close');
@@ -1346,3 +1352,15 @@ window.onload = () => {
         checkLastSpeak()
     }, 2000) // Check session activity every 2 seconds
 }
+
+function handleClickOutsideCart(event) {
+    const cartTab = document.getElementById('cartTab');
+    const cartIcon = document.getElementById('cartIcon');
+
+    if (cartTab.style.visibility === 'visible' && !cartTab.contains(event.target) && !cartIcon.contains(event.target)) {
+        hideCart();
+    }
+}
+
+
+document.addEventListener('click', handleClickOutsideCart);
