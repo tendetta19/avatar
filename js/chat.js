@@ -1352,3 +1352,4 @@ window.onload = () => {
     }, 2000) // Check session activity every 2 seconds
 }
  
+

@@ -7,9 +7,14 @@
    <link href="./css/styles.css" rel="stylesheet">
    <script src="./js/SpeechSDK.js"></script>
    <script src="./js/chat.js"></script>
+   <script type="text/javascript">
+      function zoom() {
+          document.body.style.zoom = "70%" 
+      }
+</script>
 </head>
  
-<body onload="showHelpModal()"  style="background-size: cover; background-image: url('./image/background.jpg');">
+<body onload="showHelpModal(); zoom();"  style="background-size: cover; background-image: url('./image/background.jpg');">
 
    <div id="apiKeyModal" class="modal">
       <div class="modal-content">
