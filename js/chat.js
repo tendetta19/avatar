@@ -23,10 +23,13 @@ var menuOpen = false;
 
 async function fetchInitialMessage() { 
 
-    const azureOpenAIEndpoint = prompt("Please key in your Azure OpenAI Endpoint:");
+/*     const azureOpenAIEndpoint = prompt("Please key in your Azure OpenAI Endpoint:");
     const azureOpenAIApiKey = prompt("Please key in your Azure OpenAI API key:");
-    const azureOpenAIDeploymentName = prompt("Please key in your deployment name:");
+    const azureOpenAIDeploymentName = prompt("Please key in your deployment name:"); */
 
+    const azureOpenAIEndpoint = "https://justin-openai-demo.openai.azure.com/";
+    const azureOpenAIApiKey = "1a1f8c2855a44483bbd3ef4c838996c8";
+    const azureOpenAIDeploymentName = "justin-gpt-4o";
 
     let url = `${azureOpenAIEndpoint}/openai/deployments/${azureOpenAIDeploymentName}/chat/completions?api-version=2023-06-01-preview`;
     let body = JSON.stringify({
@@ -69,8 +72,10 @@ async function fetchInitialMessage() {
 // Connect to avatar service
 async function connectAvatar() {
     
-    const cogSvcRegion = prompt("Please key in your Azure Cognitive Services Region");
-    const cogSvcSubKey = prompt("Please key in your Azure Cognitive Services subscription key:");
+// const cogSvcRegion = prompt("Please key in your Azure Cognitive Services Region");
+//  const cogSvcSubKey = prompt("Please key in your Azure Cognitive Services subscription key:");
+    const cogSvcRegion = "westus2";
+    const cogSvcSubKey = "27506bcd68114a929ef02cacc8f6b279";
     if (cogSvcSubKey === '') {
         alert('Please fill in the subscription key of your speech resource.');
         return;
@@ -115,11 +120,14 @@ async function connectAvatar() {
 
     speechRecognizer = SpeechSDK.SpeechRecognizer.FromConfig(speechRecognitionConfig, autoDetectSourceLanguageConfig, SpeechSDK.AudioConfig.fromDefaultMicrophoneInput());
     
-    const azureOpenAIEndpoint = prompt("Please key in your Azure OpenAI Endpoint:");
-    const azureOpenAIApiKey = prompt("Please key in your Azure OpenAI API Key:");
-    const azureOpenAIDeploymentName = prompt("Please key in your Azure OpenAI Deployment Name:");
+    // const azureOpenAIEndpoint = prompt("Please key in your Azure OpenAI Endpoint:");
+    // const azureOpenAIApiKey = prompt("Please key in your Azure OpenAI API Key:");
+    // const azureOpenAIDeploymentName = prompt("Please key in your Azure OpenAI Deployment Name:");
 
 
+    const azureOpenAIEndpoint = "https://justin-openai-demo.openai.azure.com/";
+    const azureOpenAIApiKey = "1a1f8c2855a44483bbd3ef4c838996c8";
+    const azureOpenAIDeploymentName = "justin-gpt-4o";
 
     if (azureOpenAIEndpoint === '' || azureOpenAIApiKey === '' || azureOpenAIDeploymentName === '') {
         alert('Please fill in the Azure OpenAI endpoint, API key and deployment name.');
