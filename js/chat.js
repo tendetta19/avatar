@@ -19,13 +19,16 @@ var lastSpeakTime
 var imgUrl = ""
 var finalCart = []
 var menuOpen = false;
- 
+const azureOpenAIEndpoint = prompt("Please key in your Azure OpenAI Endpoint:");
+const azureOpenAIApiKey = prompt("Please key in your Azure OpenAI API key:");
+const azureOpenAIDeploymentName = prompt("Please key in your deployment name:");
+
+const cogSvcRegion = prompt("Please key in your Azure Cognitive Services Region");
+const cogSvcSubKey = prompt("Please key in your Azure Cognitive Services subscription key:");
+
 
 async function fetchInitialMessage() { 
-
-    const azureOpenAIEndpoint = prompt("Please key in your Azure OpenAI Endpoint:");
-    const azureOpenAIApiKey = prompt("Please key in your Azure OpenAI API key:");
-    const azureOpenAIDeploymentName = prompt("Please key in your deployment name:");
+ 
 
 
     let url = `${azureOpenAIEndpoint}/openai/deployments/${azureOpenAIDeploymentName}/chat/completions?api-version=2023-06-01-preview`;
@@ -68,9 +71,7 @@ async function fetchInitialMessage() {
 // Connect to avatar service
 // Connect to avatar service
 async function connectAvatar() {
-    
-    const cogSvcRegion = prompt("Please key in your Azure Cognitive Services Region");
-    const cogSvcSubKey = prompt("Please key in your Azure Cognitive Services subscription key:");
+     
     if (cogSvcSubKey === '') {
         alert('Please fill in the subscription key of your speech resource.');
         return;
@@ -114,10 +115,7 @@ async function connectAvatar() {
     var autoDetectSourceLanguageConfig = SpeechSDK.AutoDetectSourceLanguageConfig.fromLanguages(sttLocales);
 
     speechRecognizer = SpeechSDK.SpeechRecognizer.FromConfig(speechRecognitionConfig, autoDetectSourceLanguageConfig, SpeechSDK.AudioConfig.fromDefaultMicrophoneInput());
-    
-    const azureOpenAIEndpoint = prompt("Please key in your Azure OpenAI Endpoint:");
-    const azureOpenAIApiKey = prompt("Please key in your Azure OpenAI API Key:");
-    const azureOpenAIDeploymentName = prompt("Please key in your Azure OpenAI Deployment Name:");
+     
 
 
 
