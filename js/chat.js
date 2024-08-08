@@ -19,12 +19,18 @@ var lastSpeakTime
 var imgUrl = ""
 var finalCart = []
 var menuOpen = false;
-const azureOpenAIEndpoint = prompt("Please key in your Azure OpenAI Endpoint:");
+
+const azureOpenAIEndpoint = "https://justin-openai-demo.openai.azure.com/";
+const azureOpenAIDeploymentName = "justin-gpt-4o";
+const azureOpenAIApiKey = "1a1f8c2855a44483bbd3ef4c838996c8";	
+const cogSvcRegion = "westus2";
+const cogSvcSubKey = "27506bcd68114a929ef02cacc8f6b279"; 
+/*const azureOpenAIEndpoint = prompt("Please key in your Azure OpenAI Endpoint:");
 const azureOpenAIApiKey = prompt("Please key in your Azure OpenAI API key:");
 const azureOpenAIDeploymentName = prompt("Please key in your deployment name:");
 
 const cogSvcRegion = prompt("Please key in your Azure Cognitive Services Region");
-const cogSvcSubKey = prompt("Please key in your Azure Cognitive Services subscription key:");
+const cogSvcSubKey = prompt("Please key in your Azure Cognitive Services subscription key:");*/
 
 
 async function fetchInitialMessage() { 
