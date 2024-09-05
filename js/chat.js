@@ -427,10 +427,10 @@ function addToCart(itemName, itemPrice, lowerText) {
 }
 
 function emptyCart() {
-    const cartItems = document.getElementById('listCart');
-    cartItems.innerHTML = '';
+     
     finalCart = [];
     updateCartDisplay(); 
+    console.log("Cart has been cleared")
 }
 function removeItem(itemName) {
     let quantityToRemove = extractQuantity(lowerText);
