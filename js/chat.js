@@ -20,7 +20,7 @@ var imgUrl = ""
 var finalCart = []
 var menuOpen = false;
 
-const azureOpenAIEndpoint = "https://justin-openai1-demo.openai.azure.com/";
+const azureOpenAIEndpoint = "https://justin-openai-demo1.openai.azure.com/";
 const azureOpenAIDeploymentName = "justin-gpt-4o";
 const azureOpenAIApiKey = "08eb5b9b82394ed990afc3c4963e7686";	
 const cogSvcRegion = "westus";
