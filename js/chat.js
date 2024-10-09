@@ -20,9 +20,9 @@ var imgUrl = ""
 var finalCart = []
 var menuOpen = false;
 
-const azureOpenAIEndpoint = "https://justin-openai-demo.openai.azure.com/";
+const azureOpenAIEndpoint = "https://justin-openai1-demo.openai.azure.com/";
 const azureOpenAIDeploymentName = "justin-gpt-4o";
-const azureOpenAIApiKey = "1a1f8c2855a44483bbd3ef4c838996c8";	
+const azureOpenAIApiKey = "08eb5b9b82394ed990afc3c4963e7686";	
 const cogSvcRegion = "westus";
 const cogSvcSubKey = "6245c641253e4eeeb0c1533486226fee"; 
 /*const azureOpenAIEndpoint = prompt("Please key in your Azure OpenAI Endpoint:");
