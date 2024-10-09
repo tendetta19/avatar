@@ -20,11 +20,11 @@ var imgUrl = ""
 var finalCart = []
 var menuOpen = false;
 
-const azureOpenAIEndpoint = "https://shawn-openai-service-1.openai.azure.com";
+const azureOpenAIEndpoint = "https://justin-openai-demo1.openai.azure.com/";
 const azureOpenAIDeploymentName = "gpt-4o";
-const azureOpenAIApiKey = "d0675b2ccedc4ffaba70d531b97db5e9";	
-const cogSvcRegion = "westus";
-const cogSvcSubKey = "6245c641253e4eeeb0c1533486226fee"; 
+const azureOpenAIApiKey = "08eb5b9b82394ed990afc3c4963e7686";	
+const cogSvcRegion = "westus2";
+const cogSvcSubKey = "fd3447a087054d3aafc106cdb6921844"; 
 /*const azureOpenAIEndpoint = prompt("Please key in your Azure OpenAI Endpoint:");
 const azureOpenAIApiKey = prompt("Please key in your Azure OpenAI API key:");
 const azureOpenAIDeploymentName = prompt("Please key in your deployment name:");
@@ -38,6 +38,7 @@ async function fetchInitialMessage() {
 
 
     let url = `${azureOpenAIEndpoint}/openai/deployments/${azureOpenAIDeploymentName}/chat/completions?api-version=2023-06-01-preview`;
+    console.log(url)
     let body = JSON.stringify({
         messages: [
             {
