@@ -1167,6 +1167,20 @@ function getImageUrl(itemName) {
             return './image/milo.png';
         case 'wagyu':
                 return './image/wagyu.png';
+            
+        case 'coffee':
+            return './image/coffee.png';
+        case 'fries':
+            return './image/fries.png';
+        case 'nuggets':
+            return './image/nuggets.png';
+        case 'orange juice':
+            return './image/orange_juice.png';
+        case 'salad':
+                return './image/salad.png';
+        case 'tea':
+                        return './image/tea.png';
+            
         default:
             return './image/wagyu.png';
     }
